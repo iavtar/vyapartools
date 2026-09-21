@@ -1,11 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VyaparTool — Free billing tools for small businesses</title>
-<meta name="description" content="Free GST bill maker and quotation maker for Indian small businesses. No download, no signup. Your data stays on your phone.">
+<title>VyaparTool — Free GST Bill, Quotation &amp; Receipt Maker</title>
+<meta name="description" content="Free GST bill maker, quotation maker, rent receipt and salary slip tools for Indian small businesses. No download, no signup — your data stays on your phone.">
+<link rel="canonical" href="https://www.vyapartool.com/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#14213D">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VyaparTool">
+<meta property="og:locale" content="en_IN">
+<meta property="og:url" content="https://www.vyapartool.com/">
+<meta property="og:title" content="VyaparTool — Free GST Bill, Quotation &amp; Receipt Maker">
+<meta property="og:description" content="Free GST bills, quotations, rent receipts and salary slips for Indian small businesses. No download, no signup.">
+<meta property="og:image" content="https://www.vyapartool.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="VyaparTool — free GST bills, quotations, receipts and payslips">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VyaparTool — Free GST Bill, Quotation &amp; Receipt Maker">
+<meta name="twitter:description" content="Free GST bills, quotations, rent receipts and salary slips for Indian small businesses. No download, no signup.">
+<meta name="twitter:image" content="https://www.vyapartool.com/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.vyapartool.com/#org",
+      "name": "VyaparTool",
+      "url": "https://www.vyapartool.com/",
+      "logo": "https://www.vyapartool.com/apple-touch-icon.png",
+      "email": "contact@vyapartool.com",
+      "areaServed": "IN",
+      "contactPoint": [{
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "email": "contact@vyapartool.com",
+        "availableLanguage": ["en", "hi"],
+        "areaServed": "IN"
+      }]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.vyapartool.com/#website",
+      "url": "https://www.vyapartool.com/",
+      "name": "VyaparTool",
+      "description": "Free GST billing and business paperwork tools for Indian small businesses.",
+      "inLanguage": "en-IN",
+      "publisher": { "@id": "https://www.vyapartool.com/#org" }
+    },
+    {
+      "@type": "ItemList",
+      "name": "Free business tools",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "GST Bill Maker", "url": "https://www.vyapartool.com/bill/" },
+        { "@type": "ListItem", "position": 2, "name": "Quotation Maker", "url": "https://www.vyapartool.com/quotation/" },
+        { "@type": "ListItem", "position": 3, "name": "GST Calculator", "url": "https://www.vyapartool.com/gst/" },
+        { "@type": "ListItem", "position": 4, "name": "Rent Receipt Generator", "url": "https://www.vyapartool.com/rent-receipt/" },
+        { "@type": "ListItem", "position": 5, "name": "Salary Slip Maker", "url": "https://www.vyapartool.com/salary-slip/" },
+        { "@type": "ListItem", "position": 6, "name": "Offer Poster Maker", "url": "https://www.vyapartool.com/poster/" }
+      ]
+    }
+  ]
+}
+</script>
 <style>
 :root {
   --ink: #14213D;
@@ -66,7 +131,7 @@ header.top .free-tag { font-size: 0.8rem; opacity: 0.75; }
 .minibill .mb-head { display: flex; justify-content: space-between; border-bottom: 1.5px solid #1A1A1A; padding-bottom: 0.4rem; }
 .minibill .mb-head b { font-family: "IBM Plex Serif", Georgia, serif; font-size: 0.8rem; }
 .minibill .mb-head i { color: #9E2B25; font-style: normal; font-weight: 700; letter-spacing: 0.1em; font-size: 0.55rem; }
-.minibill .mb-row { display: flex; justify-content: space-between; padding: 0.28rem 0; border-bottom: 1px solid #EEE; }
+.minibill .mb-row { display: flex; justify-content: space-between; gap: 0.6rem; padding: 0.28rem 0; border-bottom: 1px solid #EEE; }
 .minibill .mb-total { display: flex; justify-content: space-between; font-weight: 700; color: #9E2B25; padding-top: 0.35rem; font-size: 0.7rem; }
 
 /* tools */
@@ -82,8 +147,23 @@ header.top .free-tag { font-size: 0.8rem; opacity: 0.75; }
 .tool h3 { font-size: 1rem; margin: 0.4rem 0 0.2rem; }
 .tool p { font-size: 0.85rem; color: var(--ink-soft); }
 .tool .go { display: inline-block; margin-top: 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--ledger); }
-.tool.soon { opacity: 0.65; }
+.tool.soon { opacity: 0.8; }
+.tool.soon:hover { opacity: 1; }
 .tool.soon .go { color: var(--ink-soft); font-weight: 500; }
+
+/* contact */
+.contact { padding: 0.2rem 0 2rem; }
+.contact-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.3rem 1.4rem;
+  display: grid; grid-template-columns: 1fr auto; gap: 1.2rem; align-items: center;
+}
+@media (max-width: 680px) { .contact-card { grid-template-columns: 1fr; } }
+.contact-card h2 { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.3rem; }
+.contact-card p { font-size: 0.88rem; color: var(--ink-soft); max-width: 42rem; }
+.contact-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+.contact-cta .mail { font-size: 0.8rem; color: var(--ink-soft); }
+.contact-cta .mail a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
 /* why */
 .why { padding: 1.6rem 0 2rem; }
@@ -97,6 +177,7 @@ header.top .free-tag { font-size: 0.8rem; opacity: 0.75; }
 
 footer { border-top: 1px solid var(--line); padding: 1.2rem 0 2rem; font-size: 0.82rem; color: var(--ink-soft); }
 footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+footer a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 </style>
 </head>
 <body>
@@ -110,7 +191,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wr
 <section class="hero">
   <div class="wrap">
     <div>
-      <h1>Bills and quotations for your vyapar — free, in under a minute</h1>
+      <h1>Free GST bills, quotations and receipts for your vyapar — in under a minute</h1>
       <p class="sub">No download. No signup. Open a tool, fill the form, print or share on WhatsApp. Works on any phone or computer.</p>
       <div class="cta">
         <a class="btn red" href="bill/">Make a bill</a>
@@ -129,13 +210,13 @@ footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wr
 
 <section class="tools">
   <div class="wrap">
-    <h2>Tools</h2>
+    <h2>Free tools for Indian small businesses</h2>
     <div class="tool-grid">
       <a class="tool" href="bill/">
         <div class="t-ico">🧾</div>
-        <h3>Bill Maker</h3>
+        <h3>GST Bill Maker</h3>
         <p>GST bills with your logo, stamp and signature. Print, PDF, or share as image on WhatsApp.</p>
-        <span class="go">Open Bill Maker</span>
+        <span class="go">Open GST Bill Maker</span>
       </a>
       <a class="tool" href="quotation/">
         <div class="t-ico">📋</div>
@@ -167,19 +248,19 @@ footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wr
         <p>Sale posters with your shop name — download as image for WhatsApp status.</p>
         <span class="go">Open Poster Maker</span>
       </a>
-      <div class="tool soon">
+      <a class="tool soon" href="mailto:contact@vyapartool.com?subject=VyaparTool%3A%20Tool%20request">
         <div class="t-ico">🛠️</div>
         <h3>More tools coming</h3>
-        <p>Rent receipts, salary slips, delivery challans. Tell us what your business needs.</p>
-        <span class="go">Coming soon</span>
-      </div>
+        <p>Delivery challans, purchase orders and payment reminders. Tell us what your business needs.</p>
+        <span class="go">Tell us what you need →</span>
+      </a>
     </div>
   </div>
 </section>
 
 <section class="why">
   <div class="wrap">
-    <h2>Why shopkeepers use VyaparTools</h2>
+    <h2>Why shopkeepers use VyaparTool</h2>
     <div class="why-grid">
       <div class="w"><b>Your data stays with you</b><span>Bills are saved on your own phone. Nothing is uploaded to any server.</span></div>
       <div class="w"><b>Nothing to install</b><span>Opens in your browser. Add it to your home screen and it works like an app.</span></div>
@@ -188,11 +269,27 @@ footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wr
   </div>
 </section>
 
+<section class="contact">
+  <div class="wrap">
+    <div class="contact-card">
+      <div>
+        <h2>Need a tool we don’t have?</h2>
+        <p>Tell us what paperwork eats your time — delivery challans, purchase orders, payment reminders, anything. We read every mail, and we build what shopkeepers ask for most.</p>
+      </div>
+      <div class="contact-cta">
+        <a class="btn red" href="mailto:contact@vyapartool.com?subject=VyaparTool%3A%20Tool%20request">Write to us</a>
+        <span class="mail"><a href="mailto:contact@vyapartool.com">contact@vyapartool.com</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
-    <span>© 2026 VyaparTools</span>
-    <span>Questions or a tool request? Write us: contact@vyapartool.com</span>
+    <span>© 2026 VyaparTool</span>
+    <span>Questions or a tool request? Write us: <a href="mailto:contact@vyapartool.com">contact@vyapartool.com</a></span>
   </div>
 </footer>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
