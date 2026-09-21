@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GST Calculator — add or remove GST from any price</title>
+<meta name="description" content="Free GST calculator for India. Add GST to a base price or remove GST from an MRP. Shows CGST/SGST or IGST breakup for 5%, 12%, 18%, 28%.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
+<style>
+:root {
+  --ink: #14213D; --ink-soft: #4A5878; --bg: #EEF0F4; --card: #FFFFFF;
+  --line: #D5DAE3; --ledger: #9E2B25; --ledger-soft: #F6E9E8; --radius: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #E8EBF2; --ink-soft: #A9B2C6; --bg: #171A21; --card: #21252F;
+    --line: #333A47; --ledger: #E2635B; --ledger-soft: #3A2422;
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #E8EBF2; --ink-soft: #A9B2C6; --bg: #171A21; --card: #21252F;
+  --line: #333A47; --ledger: #E2635B; --ledger-soft: #3A2422;
+}
+* { box-sizing: border-box; margin: 0; }
+body {
+  font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  background: var(--bg); color: var(--ink); line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+header.top { background: #14213D; color: #fff; padding: 0.8rem 0; }
+header.top .wrap { display: flex; align-items: baseline; gap: 0.6rem; }
+.wrap { max-width: 640px; margin: 0 auto; padding: 0 1.2rem; }
+.wordmark { font-family: "IBM Plex Serif", Georgia, serif; font-size: 1.15rem; font-weight: 600; }
+.wordmark span { color: #F0A99F; }
+header.top a { color: #fff; text-decoration: none; font-size: 0.85rem; margin-left: auto; opacity: 0.85; }
+header.top a:hover { opacity: 1; }
+
+main { padding: 1.6rem 0 2.5rem; }
+h1 { font-family: "IBM Plex Serif", Georgia, serif; font-size: 1.5rem; font-weight: 600; margin-bottom: 0.3rem; }
+p.sub { color: var(--ink-soft); font-size: 0.92rem; margin-bottom: 1.2rem; }
+
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.2rem 1.3rem;
+}
+.mode { display: flex; gap: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; margin-bottom: 1rem; }
+.mode button {
+  flex: 1; font: inherit; font-size: 0.9rem; font-weight: 500; padding: 0.55rem 0.5rem;
+  background: var(--card); color: var(--ink); border: none; cursor: pointer;
+}
+.mode button.on { background: #14213D; color: #fff; font-weight: 600; }
+.mode button:focus-visible { outline: 2px solid var(--ledger); outline-offset: -2px; }
+
+label.f { display: block; font-size: 0.8rem; color: var(--ink-soft); margin-bottom: 0.2rem; }
+input, select {
+  font: inherit; width: 100%; background: var(--card); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.55rem 0.65rem; font-size: 1rem;
+}
+input:focus-visible, select:focus-visible, .rates button:focus-visible { outline: 2px solid var(--ledger); outline-offset: 1px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 0.9rem; }
+@media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+
+.rates { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+.rates button {
+  font: inherit; font-size: 0.9rem; font-weight: 500; cursor: pointer;
+  padding: 0.4rem 0.85rem; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+}
+.rates button.on { background: var(--ledger); border-color: var(--ledger); color: #fff; font-weight: 600; }
+
+.result { margin-top: 1.1rem; border-top: 1px dashed var(--line); padding-top: 1rem; }
+.result .r { display: flex; justify-content: space-between; padding: 0.28rem 0; font-size: 0.95rem; }
+.result .r span:first-child { color: var(--ink-soft); }
+.result .r.big {
+  background: var(--ledger-soft); border-radius: var(--radius);
+  padding: 0.6rem 0.8rem; margin-top: 0.5rem;
+  font-weight: 700; font-size: 1.15rem; color: var(--ledger);
+}
+.result .r.big span:first-child { color: var(--ledger); font-weight: 600; font-size: 0.95rem; align-self: center; }
+
+.actions { margin-top: 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.btn {
+  font: inherit; cursor: pointer; font-size: 0.9rem; font-weight: 500;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  border-radius: var(--radius); padding: 0.5rem 0.9rem;
+}
+.btn:hover { border-color: var(--ink-soft); }
+.note { margin-top: 1.3rem; font-size: 0.8rem; color: var(--ink-soft); }
+
+#toast {
+  position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--bg); padding: 0.55rem 1rem;
+  border-radius: var(--radius); font-size: 0.88rem;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+#toast.show { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="wordmark">Vyapar<span>Tools</span></div>
+    <a href="../">← All tools</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <h1>GST Calculator</h1>
+    <p class="sub">Add GST to a base price, or find the GST hidden inside an MRP.</p>
+
+    <div class="card">
+      <div class="mode" role="tablist" aria-label="Calculation mode">
+        <button id="mAdd" class="on" type="button">Add GST to price</button>
+        <button id="mRemove" type="button">Remove GST from MRP</button>
+      </div>
+
+      <div class="row">
+        <div>
+          <label class="f" for="amount" id="amountLabel">Base price ₹ (before GST)</label>
+          <input id="amount" type="number" min="0" step="0.01" placeholder="1000" inputmode="decimal" autofocus>
+        </div>
+        <div>
+          <label class="f" for="taxType">Tax type</label>
+          <select id="taxType">
+            <option value="cgst_sgst">CGST + SGST (within state)</option>
+            <option value="igst">IGST (other state)</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="f">GST rate</label>
+      <div class="rates" id="rates">
+        <button type="button" data-r="0.25">0.25%</button>
+        <button type="button" data-r="3">3%</button>
+        <button type="button" data-r="5">5%</button>
+        <button type="button" data-r="12">12%</button>
+        <button type="button" data-r="18" class="on">18%</button>
+        <button type="button" data-r="28">28%</button>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <div class="r"><span id="lblBase">Base price</span><strong id="rBase">—</strong></div>
+        <div class="r" id="rowSplit1"><span id="lblT1">CGST @ 9%</span><strong id="rT1">—</strong></div>
+        <div class="r" id="rowSplit2"><span id="lblT2">SGST @ 9%</span><strong id="rT2">—</strong></div>
+        <div class="r"><span>Total GST</span><strong id="rTax">—</strong></div>
+        <div class="r big"><span id="lblFinal">Final price</span><span id="rFinal">—</span></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btnCopy" type="button">Copy breakup</button>
+        <button class="btn" id="btnWa" type="button">Send on WhatsApp</button>
+      </div>
+    </div>
+
+    <p class="note">CGST and SGST are half the rate each, for sales within your state. IGST is the full rate, for sales to another state. Common rates: 5% (essentials), 12% and 18% (most goods and services), 28% (luxury items).</p>
+  </div>
+</main>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var mode = "add"; // add | remove
+  var rate = 18;
+
+  function fmt(n) {
+    return "₹" + n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function calc() {
+    var v = parseFloat($("amount").value);
+    if (!isFinite(v) || v <= 0) { $("result").hidden = true; return null; }
+    var base, tax, final;
+    if (mode === "add") { base = v; tax = v * rate / 100; final = v + tax; }
+    else { final = v; base = v / (1 + rate / 100); tax = final - base; }
+    return { base: base, tax: tax, final: final };
+  }
+
+  function render() {
+    $("amountLabel").textContent = mode === "add" ? "Base price ₹ (before GST)" : "MRP ₹ (including GST)";
+    var c = calc();
+    if (!c) return;
+    $("result").hidden = false;
+    var split = $("taxType").value === "cgst_sgst";
+    $("rowSplit1").hidden = !split;
+    $("rowSplit2").hidden = !split;
+    if (split) {
+      $("lblT1").textContent = "CGST @ " + (rate / 2) + "%";
+      $("lblT2").textContent = "SGST @ " + (rate / 2) + "%";
+      $("rT1").textContent = fmt(c.tax / 2);
+      $("rT2").textContent = fmt(c.tax / 2);
+    }
+    $("rBase").textContent = fmt(c.base);
+    $("rTax").textContent = fmt(c.tax) + ($("taxType").value === "igst" ? " (IGST @ " + rate + "%)" : "");
+    $("lblFinal").textContent = mode === "add" ? "Final price" : "Price before GST was added";
+    $("rFinal").textContent = mode === "add" ? fmt(c.final) : fmt(c.base);
+    if (mode === "remove") { $("lblBase").textContent = "MRP"; $("rBase").textContent = fmt(c.final); }
+    else { $("lblBase").textContent = "Base price"; }
+  }
+
+  function breakupText() {
+    var c = calc();
+    if (!c) return "";
+    var lines = ["GST breakup (" + rate + "%)"];
+    lines.push("Base price: " + fmt(c.base));
+    if ($("taxType").value === "cgst_sgst") {
+      lines.push("CGST @ " + (rate/2) + "%: " + fmt(c.tax/2));
+      lines.push("SGST @ " + (rate/2) + "%: " + fmt(c.tax/2));
+    } else {
+      lines.push("IGST @ " + rate + "%: " + fmt(c.tax));
+    }
+    lines.push("Total: " + fmt(c.final));
+    return lines.join("\n");
+  }
+
+  $("mAdd").addEventListener("click", function () {
+    mode = "add"; this.classList.add("on"); $("mRemove").classList.remove("on"); render();
+  });
+  $("mRemove").addEventListener("click", function () {
+    mode = "remove"; this.classList.add("on"); $("mAdd").classList.remove("on"); render();
+  });
+  $("rates").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    rate = parseFloat(b.getAttribute("data-r"));
+    this.querySelectorAll("button").forEach(function (x) { x.classList.remove("on"); });
+    b.classList.add("on");
+    render();
+  });
+  $("amount").addEventListener("input", render);
+  $("taxType").addEventListener("change", render);
+
+  function toast(msg) {
+    var t = $("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast._h); toast._h = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+  }
+
+  $("btnCopy").addEventListener("click", function () {
+    var txt = breakupText();
+    if (!txt) { toast("Enter an amount first"); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function () { toast("Copied"); },
+        function () { toast("Could not copy"); });
+    } else toast("Copy not available here");
+  });
+  $("btnWa").addEventListener("click", function () {
+    var txt = breakupText();
+    if (!txt) { toast("Enter an amount first"); return; }
+    window.open("https://wa.me/?text=" + encodeURIComponent(txt), "_blank");
+  });
+})();
+</script>
+</body>
+</html>

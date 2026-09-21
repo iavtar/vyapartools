@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VyaparTool — Free billing tools for small businesses</title>
+<meta name="description" content="Free GST bill maker and quotation maker for Indian small businesses. No download, no signup. Your data stays on your phone.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
+<style>
+:root {
+  --ink: #14213D;
+  --ink-soft: #4A5878;
+  --bg: #EEF0F4;
+  --card: #FFFFFF;
+  --line: #D5DAE3;
+  --ledger: #9E2B25;
+  --radius: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #E8EBF2; --ink-soft: #A9B2C6; --bg: #171A21; --card: #21252F; --line: #333A47; --ledger: #E2635B;
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #E8EBF2; --ink-soft: #A9B2C6; --bg: #171A21; --card: #21252F; --line: #333A47; --ledger: #E2635B;
+}
+* { box-sizing: border-box; margin: 0; }
+body {
+  font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  background: var(--bg); color: var(--ink); line-height: 1.55;
+}
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 1.2rem; }
+header.top {
+  background: #14213D; color: #fff; padding: 0.8rem 0;
+}
+header.top .wrap { display: flex; align-items: baseline; gap: 0.6rem; }
+.wordmark { font-family: "IBM Plex Serif", Georgia, serif; font-size: 1.25rem; font-weight: 600; }
+.wordmark span { color: #F0A99F; }
+header.top .free-tag { font-size: 0.8rem; opacity: 0.75; }
+
+/* hero */
+.hero { padding: 2.6rem 0 2.2rem; }
+.hero .wrap { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; align-items: center; }
+@media (max-width: 760px) { .hero .wrap { grid-template-columns: 1fr; } }
+.hero h1 {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: clamp(1.7rem, 4vw, 2.5rem); font-weight: 600; line-height: 1.2;
+}
+.hero p.sub { margin-top: 0.8rem; color: var(--ink-soft); font-size: 1.02rem; max-width: 34rem; }
+.hero .cta { margin-top: 1.4rem; display: flex; gap: 0.7rem; flex-wrap: wrap; }
+.btn {
+  display: inline-block; text-decoration: none; font-weight: 600; font-size: 0.95rem;
+  padding: 0.65rem 1.2rem; border-radius: var(--radius);
+}
+.btn.red { background: var(--ledger); color: #fff; }
+.btn.line { border: 1.5px solid var(--ink); color: var(--ink); }
+.btn:focus-visible { outline: 2px solid var(--ledger); outline-offset: 2px; }
+
+/* mini bill graphic */
+.minibill {
+  background: #fff; color: #1A1A1A; border: 1px solid var(--line);
+  box-shadow: 0 6px 22px rgba(20,33,61,0.14);
+  padding: 1rem 1.1rem; max-width: 300px; margin: 0 auto;
+  font-size: 0.62rem; transform: rotate(1.5deg);
+}
+.minibill .mb-head { display: flex; justify-content: space-between; border-bottom: 1.5px solid #1A1A1A; padding-bottom: 0.4rem; }
+.minibill .mb-head b { font-family: "IBM Plex Serif", Georgia, serif; font-size: 0.8rem; }
+.minibill .mb-head i { color: #9E2B25; font-style: normal; font-weight: 700; letter-spacing: 0.1em; font-size: 0.55rem; }
+.minibill .mb-row { display: flex; justify-content: space-between; padding: 0.28rem 0; border-bottom: 1px solid #EEE; }
+.minibill .mb-total { display: flex; justify-content: space-between; font-weight: 700; color: #9E2B25; padding-top: 0.35rem; font-size: 0.7rem; }
+
+/* tools */
+.tools { padding: 0.5rem 0 1rem; }
+.tools h2, .why h2 { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.9rem; }
+.tool-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.9rem; }
+.tool {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 1.1rem 1.2rem; text-decoration: none; color: var(--ink); display: block;
+}
+.tool:hover { border-color: var(--ink-soft); }
+.tool .t-ico { font-size: 1.5rem; }
+.tool h3 { font-size: 1rem; margin: 0.4rem 0 0.2rem; }
+.tool p { font-size: 0.85rem; color: var(--ink-soft); }
+.tool .go { display: inline-block; margin-top: 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--ledger); }
+.tool.soon { opacity: 0.65; }
+.tool.soon .go { color: var(--ink-soft); font-weight: 500; }
+
+/* why */
+.why { padding: 1.6rem 0 2rem; }
+.why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.9rem; }
+.why .w {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.95rem 1.1rem; font-size: 0.88rem;
+}
+.why .w b { display: block; margin-bottom: 0.2rem; }
+.why .w span { color: var(--ink-soft); }
+
+footer { border-top: 1px solid var(--line); padding: 1.2rem 0 2rem; font-size: 0.82rem; color: var(--ink-soft); }
+footer .wrap { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="wordmark">Vyapar<span>Tool</span></div>
+    <div class="free-tag">free business tools</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Bills and quotations for your vyapar — free, in under a minute</h1>
+      <p class="sub">No download. No signup. Open a tool, fill the form, print or share on WhatsApp. Works on any phone or computer.</p>
+      <div class="cta">
+        <a class="btn red" href="bill/">Make a bill</a>
+        <a class="btn line" href="quotation/">Make a quotation</a>
+      </div>
+    </div>
+    <div class="minibill" aria-hidden="true">
+      <div class="mb-head"><b>Sharma Traders</b><i>BILL</i></div>
+      <div class="mb-row"><span>Rice bag 25kg</span><span>₹1,450.00</span></div>
+      <div class="mb-row"><span>Cooking oil 5L</span><span>₹780.00</span></div>
+      <div class="mb-row"><span>CGST + SGST @ 5%</span><span>₹111.50</span></div>
+      <div class="mb-total"><span>Total</span><span>₹2,341.50</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="tools">
+  <div class="wrap">
+    <h2>Tools</h2>
+    <div class="tool-grid">
+      <a class="tool" href="bill/">
+        <div class="t-ico">🧾</div>
+        <h3>Bill Maker</h3>
+        <p>GST bills with your logo, stamp and signature. Print, PDF, or share as image on WhatsApp.</p>
+        <span class="go">Open Bill Maker</span>
+      </a>
+      <a class="tool" href="quotation/">
+        <div class="t-ico">📋</div>
+        <h3>Quotation Maker</h3>
+        <p>Professional quotations and estimates for your customers, with GST and validity terms.</p>
+        <span class="go">Open Quotation Maker</span>
+      </a>
+      <a class="tool" href="gst/">
+        <div class="t-ico">🧮</div>
+        <h3>GST Calculator</h3>
+        <p>Add GST to a price or remove GST from an MRP. CGST/SGST and IGST breakup instantly.</p>
+        <span class="go">Open GST Calculator</span>
+      </a>
+      <a class="tool" href="rent-receipt/">
+        <div class="t-ico">🏠</div>
+        <h3>Rent Receipt Generator</h3>
+        <p>Make one receipt or a full year of HRA receipts in one click, with landlord PAN.</p>
+        <span class="go">Open Rent Receipts</span>
+      </a>
+      <a class="tool" href="salary-slip/">
+        <div class="t-ico">💼</div>
+        <h3>Salary Slip Maker</h3>
+        <p>Monthly payslips with earnings, PF/ESI/TDS deductions, and net pay in words.</p>
+        <span class="go">Open Salary Slips</span>
+      </a>
+      <a class="tool" href="poster/">
+        <div class="t-ico">📣</div>
+        <h3>Offer Poster Maker</h3>
+        <p>Sale posters with your shop name — download as image for WhatsApp status.</p>
+        <span class="go">Open Poster Maker</span>
+      </a>
+      <div class="tool soon">
+        <div class="t-ico">🛠️</div>
+        <h3>More tools coming</h3>
+        <p>Rent receipts, salary slips, delivery challans. Tell us what your business needs.</p>
+        <span class="go">Coming soon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="wrap">
+    <h2>Why shopkeepers use VyaparTools</h2>
+    <div class="why-grid">
+      <div class="w"><b>Your data stays with you</b><span>Bills are saved on your own phone. Nothing is uploaded to any server.</span></div>
+      <div class="w"><b>Nothing to install</b><span>Opens in your browser. Add it to your home screen and it works like an app.</span></div>
+      <div class="w"><b>Made for Indian businesses</b><span>GST (CGST/SGST/IGST), ₹ formatting, amount in words in lakh and crore.</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 VyaparTools</span>
+    <span>Questions or a tool request? Write us: contact@vyapartool.com</span>
+  </div>
+</footer>
+</body>
+</html>

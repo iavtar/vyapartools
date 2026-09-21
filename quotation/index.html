@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickQuote — Quotations for small businesses</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style id="appStyles">
+:root {
+  --ink: #14213D;
+  --ink-soft: #3C4A6B;
+  --paper: #FFFFFF;
+  --bg: #EEF0F4;
+  --line: #D5DAE3;
+  --ledger: #9E2B25;
+  --ledger-soft: #F6E9E8;
+  --ok: #1E6B4F;
+  --field-bg: #FFFFFF;
+  --radius: 6px;
+}
+:root:not([data-theme="light"]) { }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #E8EBF2;
+    --ink-soft: #A9B2C6;
+    --bg: #171A21;
+    --line: #333A47;
+    --field-bg: #21252F;
+    --ledger: #E2635B;
+    --ledger-soft: #3A2422;
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #E8EBF2;
+  --ink-soft: #A9B2C6;
+  --bg: #171A21;
+  --line: #333A47;
+  --field-bg: #21252F;
+  --ledger: #E2635B;
+  --ledger-soft: #3A2422;
+}
+* { box-sizing: border-box; margin: 0; }
+html { font-size: 16px; }
+body {
+  font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+header.app-bar {
+  background: #14213D;
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
+}
+header.app-bar h1 {
+  font-family: "IBM Plex Serif", Georgia, serif;
+  font-size: 1.25rem; font-weight: 600; letter-spacing: 0.01em;
+}
+header.app-bar h1 span { color: #F0A99F; }
+header.app-bar .tagline { font-size: 0.82rem; opacity: 0.75; }
+header.app-bar .spacer { flex: 1; }
+.btn {
+  font: inherit; cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--field-bg); color: var(--ink);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.9rem; font-size: 0.9rem; font-weight: 500;
+}
+.btn:hover { border-color: var(--ink-soft); }
+.btn:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--ledger); outline-offset: 1px;
+}
+.btn.primary { background: var(--ledger); border-color: var(--ledger); color: #fff; }
+.btn.primary:hover { filter: brightness(1.07); }
+.btn.ghost-on-dark { background: transparent; color: #fff; border-color: rgba(255,255,255,0.35); }
+.btn.ghost-on-dark:hover { border-color: #fff; }
+.btn.small { padding: 0.3rem 0.6rem; font-size: 0.82rem; }
+.btn.danger { color: var(--ledger); border-color: var(--ledger); background: transparent; }
+
+main.layout {
+  display: grid; grid-template-columns: minmax(340px, 460px) 1fr;
+  gap: 1.2rem; padding: 1.2rem; max-width: 1280px; margin: 0 auto;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  main.layout { grid-template-columns: 1fr; }
+}
+
+/* ---------- form panel ---------- */
+.panel {
+  background: var(--field-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.panel section { padding: 1rem 1.1rem; border-bottom: 1px solid var(--line); }
+.panel section:last-child { border-bottom: none; }
+.panel h2 {
+  font-size: 0.95rem; font-weight: 600; margin-bottom: 0.7rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel h2 .hint { font-size: 0.75rem; font-weight: 400; color: var(--ink-soft); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.grid2 .full { grid-column: 1 / -1; }
+label.f { display: block; font-size: 0.78rem; color: var(--ink-soft); margin-bottom: 0.15rem; }
+input, select, textarea {
+  font: inherit; width: 100%;
+  background: var(--field-bg); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.45rem 0.55rem; font-size: 0.9rem;
+}
+textarea { resize: vertical; min-height: 2.4rem; }
+
+/* items table in form */
+.items-form { width: 100%; border-collapse: collapse; }
+.items-form th {
+  text-align: left; font-size: 0.75rem; color: var(--ink-soft);
+  font-weight: 500; padding: 0 0.3rem 0.3rem 0;
+}
+.items-form td { padding: 0 0.3rem 0.45rem 0; vertical-align: top; }
+.items-form td:last-child, .items-form th:last-child { padding-right: 0; }
+.items-form .qty { width: 4.2rem; }
+.items-form .rate { width: 6rem; }
+.items-form .rm { width: 2rem; }
+.rm button {
+  border: none; background: none; color: var(--ink-soft);
+  cursor: pointer; font-size: 1rem; padding: 0.4rem 0.2rem;
+}
+.rm button:hover { color: var(--ledger); }
+
+.logo-controls { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.logo-controls input[type="file"] { width: auto; flex: 1; min-width: 0; border: none; padding: 0.2rem 0; background: transparent; }
+#logoThumb, #signThumb, #stampThumb { height: 42px; max-width: 110px; object-fit: contain; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 2px; }
+.bill .b-sign { align-items: flex-end; gap: 2rem; }
+.bill .b-signimg { max-height: 56px; max-width: 170px; object-fit: contain; display: block; margin: 0 auto; }
+.bill .b-sign .line { margin-top: 0.4rem; }
+.bill .b-sign div:has(.b-signimg[hidden]) .line { margin-top: 2rem; }
+.bill .b-stamp { max-height: 90px; max-width: 110px; object-fit: contain; opacity: 0.9; }
+.bill .b-logo { max-height: 64px; max-width: 200px; object-fit: contain; margin-bottom: 0.4rem; display: block; }
+.taxrow { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.taxrow > div { flex: 1; min-width: 8rem; }
+
+.actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+/* saved bills */
+.saved-list { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+.saved-list li {
+  display: flex; align-items: center; gap: 0.6rem;
+  border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 0.45rem 0.6rem; font-size: 0.85rem;
+}
+.saved-list .who { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.saved-list .amt { font-weight: 600; }
+.empty-note { font-size: 0.83rem; color: var(--ink-soft); }
+
+/* ---------- bill preview ---------- */
+.preview-wrap { position: sticky; top: 1rem; }
+.preview-tools { display: flex; gap: 0.6rem; margin-bottom: 0.7rem; flex-wrap: wrap; }
+.bill {
+  background: #fff; color: #1A1A1A;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 2rem 2.2rem;
+  max-width: 760px;
+  min-height: 640px;
+  box-shadow: 0 1px 4px rgba(20,33,61,0.10);
+  font-size: 0.9rem;
+}
+.bill .b-top { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 2px solid #1A1A1A; padding-bottom: 0.9rem; }
+.bill .b-biz h3 { font-family: "IBM Plex Serif", Georgia, serif; font-size: 1.3rem; font-weight: 600; }
+.bill .b-biz p { font-size: 0.82rem; color: #444; white-space: pre-line; }
+.bill .b-doc { text-align: right; }
+.bill .b-doc .doc-title {
+  font-size: 0.8rem; letter-spacing: 0.14em; color: #9E2B25; font-weight: 600;
+}
+.bill .b-doc .meta {
+  display: flex; justify-content: flex-end; align-items: baseline;
+  gap: 0.45rem; font-size: 0.82rem; line-height: 1.6; white-space: nowrap;
+}
+.bill .b-doc .meta span { color: #666; }
+.bill .b-doc .meta strong { font-weight: 600; }
+.bill .b-parties { display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 0; }
+.bill .b-parties h4 { font-size: 0.72rem; color: #666; font-weight: 500; margin-bottom: 0.15rem; }
+.bill .b-parties p { white-space: pre-line; font-size: 0.85rem; }
+.bill .b-parties .cust-name { font-weight: 600; }
+.bill table.b-items { width: 100%; border-collapse: collapse; margin-top: 0.2rem; }
+.bill table.b-items th {
+  border-top: 1.5px solid #1A1A1A; border-bottom: 1px solid #1A1A1A;
+  font-size: 0.75rem; font-weight: 600; padding: 0.4rem 0.4rem; text-align: left;
+}
+.bill table.b-items td { padding: 0.42rem 0.4rem; border-bottom: 1px solid #E4E4E4; vertical-align: top; }
+.bill table.b-items .num { text-align: right; white-space: nowrap; }
+.bill table.b-items .sno { width: 2rem; color: #666; }
+.bill .b-totals { display: flex; justify-content: flex-end; margin-top: 0.6rem; }
+.bill .b-totals table { border-collapse: collapse; font-size: 0.87rem; min-width: 15rem; }
+.bill .b-totals td { padding: 0.22rem 0.4rem; }
+.bill .b-totals td:first-child { color: #555; }
+.bill .b-totals td:last-child { text-align: right; }
+.bill .b-totals tr.grand td {
+  border-top: 1.5px solid #1A1A1A; font-weight: 700; font-size: 1rem;
+  color: #9E2B25; padding-top: 0.4rem;
+}
+.bill .b-words { margin-top: 0.7rem; font-size: 0.8rem; color: #444; border-top: 1px dashed #CCC; padding-top: 0.5rem; }
+.bill .b-words strong { color: #1A1A1A; font-weight: 600; }
+.bill .b-notes { margin-top: 0.9rem; font-size: 0.78rem; color: #555; white-space: pre-line; }
+.bill .b-sign { margin-top: 2.4rem; display: flex; justify-content: flex-end; }
+.bill .b-sign div { text-align: center; font-size: 0.8rem; color: #444; }
+.bill .b-sign .line { border-top: 1px solid #999; padding-top: 0.3rem; margin-top: 2rem; min-width: 11rem; }
+.bill .b-band { display: none; }
+.bill .b-inner { padding: 0; }
+.bill .b-thanks { display: none; }
+
+/* toast */
+#toast {
+  position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--bg);
+  padding: 0.55rem 1rem; border-radius: var(--radius); font-size: 0.88rem;
+  opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+:root[data-theme="dark"] #toast, :root:not([data-theme="light"]) #toast { }
+#toast.show { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  #toast { transition: none; }
+}
+
+/* ---------- print: only the bill, A4 ---------- */
+@page { size: A4; margin: 12mm; }
+@media print {
+  body { background: #fff; }
+  header.app-bar, .panel, .preview-tools, #toast { display: none !important; }
+  main.layout { display: block; padding: 0; max-width: none; }
+  .preview-wrap { position: static; }
+  .bill { border: none; box-shadow: none; max-width: none; min-height: 0; padding: 0.5cm; border-radius: 0; }
+  /* never split a row across pages; repeat the column headings on every page */
+  .bill table.b-items thead { display: table-header-group; }
+  .bill table.b-items tr { break-inside: avoid; page-break-inside: avoid; }
+  /* keep totals, amount-in-words, and signature blocks whole */
+  .bill .b-totals, .bill .b-words, .bill .b-notes, .bill .b-sign {
+    break-inside: avoid; page-break-inside: avoid;
+  }
+}
+
+/* compact mode: kicks in automatically for long bills so more fits per A4 page */
+.bill.compact { font-size: 0.8rem; }
+.bill.compact table.b-items td { padding: 0.22rem 0.35rem; }
+.bill.compact table.b-items th { padding: 0.3rem 0.35rem; }
+.bill.compact .b-top { padding-bottom: 0.6rem; }
+.bill.compact .b-parties { padding: 0.55rem 0; }
+.bill.compact .b-logo { max-height: 48px; }
+.bill.compact .b-sign { margin-top: 1.2rem; }
+.bill.compact .b-signimg { max-height: 44px; }
+.bill.compact .b-stamp { max-height: 70px; }
+</style>
+</head>
+<body>
+<header class="app-bar">
+  <h1>Quick<span>Quote</span></h1>
+  <p class="tagline">Professional quotations — in under a minute</p>
+  <div class="spacer"></div>
+  <button class="btn ghost-on-dark" id="btnNew">New quotation</button>
+</header>
+
+<main class="layout">
+  <!-- ============ FORM ============ -->
+  <div class="panel">
+    <section>
+      <h2>Your business <span class="hint">saved on this device</span></h2>
+      <div class="grid2">
+        <div class="full">
+          <label class="f" for="bizName">Business name</label>
+          <input id="bizName" placeholder="Sharma Traders">
+        </div>
+        <div class="full">
+          <label class="f" for="bizAddr">Address</label>
+          <textarea id="bizAddr" rows="2" placeholder="12, Main Market, Jaipur"></textarea>
+        </div>
+        <div class="full logo-row">
+          <label class="f" for="bizLogo">Company logo (optional)</label>
+          <div class="logo-controls">
+            <img id="logoThumb" alt="" hidden>
+            <input id="bizLogo" type="file" accept="image/*">
+            <button class="btn small" id="btnLogoRemove" type="button" hidden>Remove logo</button>
+          </div>
+        </div>
+        <div class="full logo-row">
+          <label class="f" for="bizSign">Signature (optional)</label>
+          <div class="logo-controls">
+            <img id="signThumb" alt="" hidden>
+            <input id="bizSign" type="file" accept="image/*">
+            <button class="btn small" id="btnSignRemove" type="button" hidden>Remove</button>
+          </div>
+        </div>
+        <div class="full logo-row">
+          <label class="f" for="bizStamp">Company stamp (optional)</label>
+          <div class="logo-controls">
+            <img id="stampThumb" alt="" hidden>
+            <input id="bizStamp" type="file" accept="image/*">
+            <button class="btn small" id="btnStampRemove" type="button" hidden>Remove</button>
+          </div>
+        </div>
+        <div>
+          <label class="f" for="bizPhone">Phone</label>
+          <input id="bizPhone" placeholder="98290 00000">
+        </div>
+        <div>
+          <label class="f" for="bizGstin">GSTIN (optional)</label>
+          <input id="bizGstin" placeholder="08ABCDE1234F1Z5">
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Quotation details</h2>
+      <div class="grid2">
+        <div>
+          <label class="f" for="invNo">Quotation number</label>
+          <input id="invNo" placeholder="001">
+        </div>
+        <div>
+          <label class="f" for="invDate">Date</label>
+          <input id="invDate" type="date">
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Customer</h2>
+      <div class="grid2">
+        <div class="full">
+          <label class="f" for="custName">Name</label>
+          <input id="custName" placeholder="Ramesh Kumar">
+        </div>
+        <div class="full">
+          <label class="f" for="custAddr">Address / phone (optional)</label>
+          <textarea id="custAddr" rows="2" placeholder="Flat 4B, Rose Apartments"></textarea>
+        </div>
+        <div class="full">
+          <label class="f" for="custGstin">Customer GSTIN (optional)</label>
+          <input id="custGstin">
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Items</h2>
+      <table class="items-form" aria-label="Quotation items">
+        <thead>
+          <tr><th>Description</th><th>HSN/SAC</th><th>Qty</th><th>Rate ₹</th><th class="rm"></th></tr>
+        </thead>
+        <tbody id="itemRows"></tbody>
+      </table>
+      <button class="btn small" id="btnAddItem">+ Add item</button>
+    </section>
+
+    <section>
+      <h2>Tax &amp; discount</h2>
+      <div class="taxrow">
+        <div>
+          <label class="f" for="taxMode">GST type</label>
+          <select id="taxMode">
+            <option value="none">No GST</option>
+            <option value="cgst_sgst">CGST + SGST (within state)</option>
+            <option value="igst">IGST (other state)</option>
+          </select>
+        </div>
+        <div>
+          <label class="f" for="taxRate">GST rate %</label>
+          <select id="taxRate">
+            <option value="5">5%</option>
+            <option value="12">12%</option>
+            <option value="18" selected>18%</option>
+            <option value="28">28%</option>
+          </select>
+        </div>
+        <div>
+          <label class="f" for="discount">Discount ₹</label>
+          <input id="discount" type="number" min="0" step="0.01" value="0">
+        </div>
+      </div>
+      <div style="margin-top:0.6rem">
+        <label class="f" for="notes">Notes on the bill (optional)</label>
+        <textarea id="notes" rows="2" placeholder="Quotation valid for 15 days. Prices include GST."></textarea>
+      </div>
+    </section>
+
+    <section>
+      <div class="actions">
+        <button class="btn primary" id="btnImage">Quotation as image</button>
+        <button class="btn" id="btnPrint">Quotation as PDF / print</button>
+        <button class="btn" id="btnSave">Save quotation</button>
+        <button class="btn" id="btnWhatsApp">Text summary on WhatsApp</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Saved quotations <span class="hint" id="savedCount"></span></h2>
+      <ul class="saved-list" id="savedList"></ul>
+      <p class="empty-note" id="savedEmpty">No saved quotations yet. They stay on this device.</p>
+    </section>
+  </div>
+
+  <!-- ============ PREVIEW ============ -->
+  <div class="preview-wrap">
+    <div class="preview-tools">
+      <button class="btn primary" id="btnImage2">Quotation as image</button>
+      <button class="btn" id="btnPrint2">Quotation as PDF / print</button>
+    </div>
+    <article class="bill" id="bill" aria-label="Quotation preview">
+      <div class="b-band"></div>
+      <div class="b-inner">
+      <div class="b-top">
+        <div class="b-biz">
+          <img id="pLogo" class="b-logo" alt="" hidden>
+          <h3 id="pBizName">Your business</h3>
+          <p id="pBizMeta"></p>
+        </div>
+        <div class="b-doc">
+          <div class="doc-title" id="pDocTitle">QUOTATION</div>
+          <div class="meta"><span>Quote no.</span><strong id="pInvNo">—</strong></div>
+          <div class="meta"><span>Date</span><strong id="pDate">—</strong></div>
+        </div>
+      </div>
+
+      <div class="b-parties">
+        <div>
+          <h4>Billed to</h4>
+          <p class="cust-name" id="pCustName">—</p>
+          <p id="pCustMeta"></p>
+        </div>
+      </div>
+
+      <table class="b-items">
+        <thead>
+          <tr>
+            <th class="sno">#</th><th>Description</th><th class="num">HSN/SAC</th>
+            <th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th>
+          </tr>
+        </thead>
+        <tbody id="pItems"></tbody>
+      </table>
+
+      <div class="b-totals">
+        <table>
+          <tbody id="pTotals"></tbody>
+        </table>
+      </div>
+
+      <p class="b-words" id="pWords" hidden></p>
+      <p class="b-notes" id="pNotes"></p>
+
+      <div class="b-sign">
+        <img id="pStamp" class="b-stamp" alt="" hidden>
+        <div>
+          <img id="pSign" class="b-signimg" alt="" hidden>
+          <div class="line">Authorised signatory</div>
+        </div>
+      </div>
+
+      <p class="b-thanks">Thank you for your business</p>
+      </div>
+    </article>
+  </div>
+</main>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- state ---------- */
+  var items = [];
+  var imgs = { logo: "", stamp: "", sign: "" };
+  var imgEls = {
+    logo:  { thumb: "logoThumb",  remove: "btnLogoRemove",  bill: "pLogo",  max: [400, 160] },
+    stamp: { thumb: "stampThumb", remove: "btnStampRemove", bill: "pStamp", max: [260, 220] },
+    sign:  { thumb: "signThumb",  remove: "btnSignRemove",  bill: "pSign",  max: [340, 120] }
+  };
+
+  function setImg(kind, dataUrl) {
+    imgs[kind] = dataUrl || "";
+    var e = imgEls[kind];
+    $(e.thumb).hidden = !imgs[kind];
+    $(e.remove).hidden = !imgs[kind];
+    $(e.bill).hidden = !imgs[kind];
+    if (imgs[kind]) { $(e.thumb).src = imgs[kind]; $(e.bill).src = imgs[kind]; }
+  }
+  function setLogo(d) { setImg("logo", d); }
+
+  var fields = ["bizName","bizAddr","bizPhone","bizGstin","invNo","invDate",
+                "custName","custAddr","custGstin","taxMode","taxRate","discount","notes"];
+
+  // any change in any field updates the bill preview immediately
+  fields.forEach(function (f) {
+    $(f).addEventListener("input", render);
+    $(f).addEventListener("change", render);
+  });
+
+  function readForm() {
+    var s = {};
+    fields.forEach(function (f) { s[f] = $(f).value; });
+    s.items = items.map(function (it) {
+      return { desc: it.desc.value, hsn: it.hsn.value, qty: it.qty.value, rate: it.rate.value };
+    });
+    return s;
+  }
+
+  /* ---------- items ---------- */
+  function addItem(data) {
+    var tr = document.createElement("tr");
+    var tdD = document.createElement("td");
+    var tdH = document.createElement("td");
+    var tdQ = document.createElement("td");
+    var tdR = document.createElement("td");
+    var tdX = document.createElement("td"); tdX.className = "rm";
+    var desc = document.createElement("input");
+    desc.placeholder = "Item or service";
+    var hsn = document.createElement("input");
+    hsn.placeholder = "850440"; hsn.maxLength = "8"; hsn.style.fontSize = "0.82rem";
+    var qty = document.createElement("input");
+    qty.type = "number"; qty.min = "0"; qty.step = "any"; qty.className = "qty"; qty.value = data && data.qty !== undefined ? data.qty : 1;
+    var rate = document.createElement("input");
+    rate.type = "number"; rate.min = "0"; rate.step = "0.01"; rate.className = "rate"; rate.placeholder = "0.00";
+    if (data) { desc.value = data.desc || ""; hsn.value = data.hsn || ""; rate.value = data.rate || ""; }
+    var rm = document.createElement("button");
+    rm.type = "button"; rm.textContent = "✕"; rm.setAttribute("aria-label", "Remove item");
+    rm.addEventListener("click", function () {
+      items = items.filter(function (it) { return it.tr !== tr; });
+      tr.remove(); render();
+    });
+    [desc, hsn, qty, rate].forEach(function (el) { el.addEventListener("input", render); });
+    tdD.appendChild(desc); tdH.appendChild(hsn); tdQ.appendChild(qty); tdR.appendChild(rate); tdX.appendChild(rm);
+    tr.appendChild(tdD); tr.appendChild(tdH); tr.appendChild(tdQ); tr.appendChild(tdR); tr.appendChild(tdX);
+    $("itemRows").appendChild(tr);
+    items.push({ tr: tr, desc: desc, hsn: hsn, qty: qty, rate: rate });
+  }
+
+  /* ---------- money helpers ---------- */
+  function fmt(n) {
+    return "₹" + n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  var ones = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven",
+    "Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+  var tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+  function two(n) { return n < 20 ? ones[n] : tens[Math.floor(n/10)] + (n%10 ? " " + ones[n%10] : ""); }
+  function three(n) {
+    var h = Math.floor(n/100), r = n%100;
+    return (h ? ones[h] + " Hundred" + (r ? " " : "") : "") + (r ? two(r) : "");
+  }
+  function inWords(num) {
+    if (num === 0) return "Zero";
+    var crore = Math.floor(num/10000000); num %= 10000000;
+    var lakh = Math.floor(num/100000); num %= 100000;
+    var thousand = Math.floor(num/1000); num %= 1000;
+    var out = [];
+    if (crore) out.push(three(crore) + " Crore");
+    if (lakh) out.push(two(lakh) + " Lakh");
+    if (thousand) out.push(two(thousand) + " Thousand");
+    if (num) out.push(three(num));
+    return out.join(" ");
+  }
+  function amountInWords(total) {
+    var r = Math.floor(total), p = Math.round((total - r) * 100);
+    var s = "Rupees " + inWords(r);
+    if (p) s += " and " + two(p) + " Paise";
+    return s + " Only";
+  }
+
+  /* ---------- compute + render ---------- */
+  function compute() {
+    var sub = 0;
+    items.forEach(function (it) {
+      var q = parseFloat(it.qty.value) || 0;
+      var r = parseFloat(it.rate.value) || 0;
+      sub += q * r;
+    });
+    var discount = Math.min(parseFloat($("discount").value) || 0, sub);
+    var taxable = sub - discount;
+    var mode = $("taxMode").value;
+    var rate = parseFloat($("taxRate").value) || 0;
+    var tax = mode === "none" ? 0 : taxable * rate / 100;
+    return { sub: sub, discount: discount, taxable: taxable, mode: mode, rate: rate, tax: tax, total: taxable + tax };
+  }
+
+  function esc(s) { return s; } // textContent everywhere; no HTML injection
+
+  function line(label, value, cls) {
+    var tr = document.createElement("tr");
+    if (cls) tr.className = cls;
+    var a = document.createElement("td"); a.textContent = label;
+    var b = document.createElement("td"); b.textContent = value;
+    tr.appendChild(a); tr.appendChild(b);
+    return tr;
+  }
+
+  function render() {
+    var s = readForm();
+    $("pBizName").textContent = s.bizName || "Your business";
+    var meta = [s.bizAddr, s.bizPhone && ("Ph: " + s.bizPhone), s.bizGstin && ("GSTIN: " + s.bizGstin)]
+      .filter(Boolean).join("\n");
+    $("pBizMeta").textContent = meta;
+    $("pDocTitle").textContent = s.taxMode === "none" ? "QUOTATION" : "TAX QUOTATION";
+    $("pInvNo").textContent = s.invNo || "—";
+    $("pDate").textContent = s.invDate ? new Date(s.invDate + "T00:00:00").toLocaleDateString("en-IN",
+      { day: "2-digit", month: "short", year: "numeric" }) : "—";
+    $("pCustName").textContent = s.custName || "—";
+    $("pCustMeta").textContent = [s.custAddr, s.custGstin && ("GSTIN: " + s.custGstin)].filter(Boolean).join("\n");
+
+    var body = $("pItems");
+    body.textContent = "";
+    var n = 0;
+    items.forEach(function (it) {
+      var d = it.desc.value, h = it.hsn.value, q = parseFloat(it.qty.value) || 0, r = parseFloat(it.rate.value) || 0;
+      if (!d && !q && !r) return;
+      n++;
+      var tr = document.createElement("tr");
+      var c1 = document.createElement("td"); c1.className = "sno"; c1.textContent = n;
+      var c2 = document.createElement("td"); c2.textContent = d || "—";
+      var c3 = document.createElement("td"); c3.className = "num"; c3.textContent = h || "—";
+      var c4 = document.createElement("td"); c4.className = "num"; c4.textContent = q || "";
+      var c5 = document.createElement("td"); c5.className = "num"; c5.textContent = r ? fmt(r) : "";
+      var c6 = document.createElement("td"); c6.className = "num"; c6.textContent = fmt(q * r);
+      [c1,c2,c3,c4,c5,c6].forEach(function (c) { tr.appendChild(c); });
+      body.appendChild(tr);
+    });
+    if (!n) {
+      var tr0 = document.createElement("tr");
+      var td0 = document.createElement("td");
+      td0.colSpan = 5; td0.textContent = "Add items to see them here"; td0.style.color = "#999";
+      tr0.appendChild(td0); body.appendChild(tr0);
+    }
+
+    // long bill? switch to compact layout so more rows fit on each A4 page
+    $("bill").classList.toggle("compact", n > 14);
+
+    var c = compute();
+    var t = $("pTotals");
+    t.textContent = "";
+    t.appendChild(line("Subtotal", fmt(c.sub)));
+    if (c.discount > 0) t.appendChild(line("Discount", "− " + fmt(c.discount)));
+    if (c.mode === "cgst_sgst") {
+      t.appendChild(line("CGST @ " + (c.rate/2) + "%", fmt(c.tax/2)));
+      t.appendChild(line("SGST @ " + (c.rate/2) + "%", fmt(c.tax/2)));
+    } else if (c.mode === "igst") {
+      t.appendChild(line("IGST @ " + c.rate + "%", fmt(c.tax)));
+    }
+    t.appendChild(line("Total", fmt(c.total), "grand"));
+
+    $("pWords").hidden = c.total <= 0;
+    if (c.total > 0) {
+      $("pWords").textContent = "";
+      var st = document.createElement("strong");
+      st.textContent = amountInWords(c.total);
+      $("pWords").appendChild(document.createTextNode("Amount in words: "));
+      $("pWords").appendChild(st);
+    }
+    $("pNotes").textContent = s.notes;
+    saveProfileAndDraft(s);
+  }
+
+  /* ---------- storage ---------- */
+  var PROFILE_KEY = "qq_profile", DRAFT_KEY = "qq_draft", BILLS_KEY = "qq_bills";
+  function saveProfileAndDraft(s) {
+    try {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify({
+        bizName: s.bizName, bizAddr: s.bizAddr, bizPhone: s.bizPhone, bizGstin: s.bizGstin, notes: s.notes,
+        logo: imgs.logo, stamp: imgs.stamp, sign: imgs.sign
+      }));
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(s));
+    } catch (e) { /* storage unavailable — app still works */ }
+  }
+  function loadBills() {
+    try { return JSON.parse(localStorage.getItem(BILLS_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function storeBills(list) {
+    try { localStorage.setItem(BILLS_KEY, JSON.stringify(list)); return true; }
+    catch (e) { return false; }
+  }
+
+  function renderSaved() {
+    var list = loadBills();
+    var ul = $("savedList");
+    ul.textContent = "";
+    $("savedEmpty").hidden = list.length > 0;
+    $("savedCount").textContent = list.length ? list.length + " saved" : "";
+    list.slice().reverse().forEach(function (b) {
+      var li = document.createElement("li");
+      var who = document.createElement("span"); who.className = "who";
+      who.textContent = "#" + (b.invNo || "—") + " · " + (b.custName || "Customer");
+      var amt = document.createElement("span"); amt.className = "amt"; amt.textContent = fmt(b.total || 0);
+      var open = document.createElement("button"); open.className = "btn small"; open.textContent = "Open";
+      open.addEventListener("click", function () { loadIntoForm(b); toast("Quotation #" + (b.invNo||"") + " loaded"); });
+      var del = document.createElement("button"); del.className = "btn small danger"; del.textContent = "Delete";
+      del.addEventListener("click", function () {
+        storeBills(loadBills().filter(function (x) { return x.id !== b.id; }));
+        renderSaved(); toast("Deleted");
+      });
+      li.appendChild(who); li.appendChild(amt); li.appendChild(open); li.appendChild(del);
+      ul.appendChild(li);
+    });
+  }
+
+  function loadIntoForm(s) {
+    fields.forEach(function (f) { if (s[f] !== undefined) $(f).value = s[f]; });
+    $("itemRows").textContent = ""; items = [];
+    (s.items && s.items.length ? s.items : [null]).forEach(function (it) { addItem(it); });
+    render();
+  }
+
+  /* ---------- actions ---------- */
+  function toast(msg) {
+    var t = $("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast._h); toast._h = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+  }
+
+  function wireUpload(inputId, kind, label) {
+    $(inputId).addEventListener("change", function () {
+      var file = this.files && this.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        var img = new Image();
+        img.onload = function () {
+          var mx = imgEls[kind].max;
+          var scale = Math.min(1, mx[0] / img.width, mx[1] / img.height);
+          var cv = document.createElement("canvas");
+          cv.width = Math.round(img.width * scale);
+          cv.height = Math.round(img.height * scale);
+          cv.getContext("2d").drawImage(img, 0, 0, cv.width, cv.height);
+          setImg(kind, cv.toDataURL("image/png"));
+          render();
+          toast(label + " added");
+        };
+        img.onerror = function () { toast("Could not read that image"); };
+        img.src = reader.result;
+      };
+      reader.onerror = function () { toast("Could not read that image"); };
+      reader.readAsDataURL(file);
+    });
+  }
+  wireUpload("bizLogo", "logo", "Logo");
+  wireUpload("bizStamp", "stamp", "Stamp");
+  wireUpload("bizSign", "sign", "Signature");
+
+  $("btnLogoRemove").addEventListener("click", function () {
+    setImg("logo", ""); $("bizLogo").value = ""; render(); toast("Logo removed");
+  });
+  $("btnStampRemove").addEventListener("click", function () {
+    setImg("stamp", ""); $("bizStamp").value = ""; render(); toast("Stamp removed");
+  });
+  $("btnSignRemove").addEventListener("click", function () {
+    setImg("sign", ""); $("bizSign").value = ""; render(); toast("Signature removed");
+  });
+
+  function saveImage() {
+    if (typeof html2canvas !== "function") { toast("Image tool didn't load — check internet and reload"); return; }
+    toast("Preparing image…");
+    html2canvas($("bill"), { scale: 2, backgroundColor: "#ffffff", useCORS: true })
+      .then(function (canvas) {
+        canvas.toBlob(function (blob) {
+          if (!blob) { toast("Could not create the image"); return; }
+          var name = "quotation-" + (($("invNo").value || "0").replace(/[^\w-]/g, "")) + ".jpg";
+          var viaCapability = window.claude && typeof window.claude.use === "function";
+          if (viaCapability) {
+            window.claude.use("downloads").then(function (dl) {
+              if (dl) {
+                dl.save({ filename: name, data: blob }).then(function () {
+                  toast("Image saved — share it on WhatsApp like a photo");
+                }).catch(function (err) {
+                  if (err && err.code === "declined") return; // viewer said no — that's fine
+                  if (err && err.code === "rate_limited") { toast("One moment — try again"); return; }
+                  showImageInTab(blob);
+                });
+              } else showImageInTab(blob);
+            }).catch(function () { showImageInTab(blob); });
+          } else {
+            // running locally or on own hosting: normal download works
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = name;
+            document.body.appendChild(a); a.click(); a.remove();
+            toast("Image downloaded");
+          }
+        }, "image/jpeg", 0.92);
+      })
+      .catch(function () { toast("Could not create the image"); });
+  }
+  function showImageInTab(blob) {
+    var w = null;
+    try { w = window.open("", "_blank"); } catch (e) {}
+    if (w && w.document) {
+      var img = w.document.createElement("img");
+      img.src = URL.createObjectURL(blob);
+      img.style.maxWidth = "100%";
+      w.document.body.style.margin = "0";
+      w.document.body.appendChild(img);
+      toast("Image opened — long-press or right-click to save");
+    } else toast("Could not open the image — allow popups and retry");
+  }
+  $("btnImage").addEventListener("click", saveImage);
+  $("btnImage2").addEventListener("click", saveImage);
+
+  $("btnAddItem").addEventListener("click", function () { addItem(); });
+  function printBill() {
+    var css = "";
+    var styleEl = document.getElementById("appStyles");
+    if (styleEl) css = styleEl.textContent;
+    var w = null;
+    try { w = window.open("", "_blank"); } catch (e) {}
+    if (w && w.document) {
+      var d = w.document;
+      d.open();
+      d.write("<!DOCTYPE html><html><head><meta charset='utf-8'><title>Bill</title>" +
+        "<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap'>" +
+        "<style>" + css + "<\/style>" +
+        "<style>body{background:#fff!important;margin:0;padding:1rem}.bill{border:none;box-shadow:none;max-width:760px;margin:0 auto}<\/style>" +
+        "<\/head><body><\/body><\/html>");
+      d.close();
+      d.body.appendChild(d.importNode($("bill"), true));
+      // give fonts and images a moment to load before printing
+      setTimeout(function () {
+        try { w.focus(); w.print(); } catch (e) {}
+      }, 500);
+    } else {
+      // popup blocked — print this page directly (print CSS shows only the bill)
+      try { window.print(); }
+      catch (e) { toast("Printing is blocked here — open the app in its own tab and try again"); }
+    }
+  }
+  $("btnPrint").addEventListener("click", printBill);
+  $("btnPrint2").addEventListener("click", printBill);
+
+  $("btnSave").addEventListener("click", function () {
+    var s = readForm();
+    var c = compute();
+    if (!s.custName && c.total === 0) { toast("Add a customer or items first"); return; }
+    s.id = Date.now(); s.total = c.total;
+    var list = loadBills(); list.push(s);
+    if (storeBills(list)) { renderSaved(); toast("Quotation saved on this device"); }
+    else toast("Could not save — storage unavailable");
+  });
+
+  $("btnWhatsApp").addEventListener("click", function () {
+    var s = readForm(), c = compute();
+    var lines = [];
+    lines.push((s.taxMode === "none" ? "Quotation" : "Tax quotation") + " #" + (s.invNo || "") + " from " + (s.bizName || "our business"));
+    items.forEach(function (it) {
+      var q = parseFloat(it.qty.value) || 0, r = parseFloat(it.rate.value) || 0;
+      if (it.desc.value || q * r) lines.push("• " + (it.desc.value || "Item") + " — " + fmt(q * r));
+    });
+    if (c.tax) lines.push("GST: " + fmt(c.tax));
+    lines.push("Total: " + fmt(c.total));
+    if (s.notes) lines.push(s.notes);
+    window.open("https://wa.me/?text=" + encodeURIComponent(lines.join("\n")), "_blank");
+  });
+
+  $("btnNew").addEventListener("click", function () {
+    var prof = {};
+    try { prof = JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch (e) {}
+    setImg("logo", prof.logo || imgs.logo);
+    setImg("stamp", prof.stamp || imgs.stamp);
+    setImg("sign", prof.sign || imgs.sign);
+    var next = "";
+    var cur = $("invNo").value.trim();
+    if (/^\d+$/.test(cur)) next = String(parseInt(cur, 10) + 1).padStart(cur.length, "0");
+    loadIntoForm({
+      bizName: prof.bizName || "", bizAddr: prof.bizAddr || "", bizPhone: prof.bizPhone || "",
+      bizGstin: prof.bizGstin || "", notes: prof.notes || "",
+      invNo: next, invDate: new Date().toISOString().slice(0,10),
+      custName: "", custAddr: "", custGstin: "",
+      taxMode: $("taxMode").value, taxRate: $("taxRate").value, discount: 0,
+      items: [null]
+    });
+    toast("New quotation started");
+  });
+
+  /* ---------- installable app (manifest injected at runtime) ---------- */
+  try {
+    var iconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">' +
+      '<rect width="512" height="512" rx="96" fill="#14213D"/>' +
+      '<rect x="116" y="96" width="280" height="340" rx="14" fill="#FFFFFF"/>' +
+      '<rect x="150" y="140" width="212" height="22" rx="6" fill="#9E2B25"/>' +
+      '<rect x="150" y="196" width="160" height="16" rx="6" fill="#C7CEDB"/>' +
+      '<rect x="150" y="232" width="180" height="16" rx="6" fill="#C7CEDB"/>' +
+      '<rect x="150" y="268" width="140" height="16" rx="6" fill="#C7CEDB"/>' +
+      '<rect x="150" y="330" width="212" height="26" rx="6" fill="#14213D"/>' +
+      '</svg>';
+    var iconUrl = "data:image/svg+xml;base64," + btoa(iconSvg);
+    var manifest = {
+      name: "QuickQuote — Quotation Maker",
+      short_name: "QuickQuote",
+      start_url: location.href,
+      display: "standalone",
+      background_color: "#EEF0F4",
+      theme_color: "#14213D",
+      icons: [{ src: iconUrl, sizes: "512x512", type: "image/svg+xml", purpose: "any" }]
+    };
+    var mLink = document.createElement("link");
+    mLink.rel = "manifest";
+    mLink.href = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" }));
+    document.head.appendChild(mLink);
+    var tMeta = document.createElement("meta");
+    tMeta.name = "theme-color"; tMeta.content = "#14213D";
+    document.head.appendChild(tMeta);
+  } catch (e) { /* install prompt unavailable — app still works in the browser */ }
+
+  /* ---------- init ---------- */
+  var savedProf = null;
+  try { savedProf = JSON.parse(localStorage.getItem(PROFILE_KEY)); } catch (e) {}
+  if (savedProf) {
+    if (savedProf.logo) setImg("logo", savedProf.logo);
+    if (savedProf.stamp) setImg("stamp", savedProf.stamp);
+    if (savedProf.sign) setImg("sign", savedProf.sign);
+  }
+
+  var draft = null;
+  try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY)); } catch (e) {}
+  if (draft) { loadIntoForm(draft); }
+  else {
+    $("invDate").value = new Date().toISOString().slice(0,10);
+    $("invNo").value = "001";
+    addItem(); render();
+  }
+  renderSaved();
+})();
+</script>
+</body>
+</html>

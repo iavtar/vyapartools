@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salary Slip Maker — free payslips for small businesses</title>
+<meta name="description" content="Free salary slip generator for India. Earnings, PF/ESI/TDS deductions, net pay in words. Print or save as PDF. No signup.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
+<style id="appStyles">
+:root {
+  --ink: #14213D; --ink-soft: #4A5878; --bg: #EEF0F4; --card: #FFFFFF;
+  --line: #D5DAE3; --ledger: #9E2B25; --radius: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #E8EBF2; --ink-soft: #A9B2C6; --bg: #171A21; --card: #21252F; --line: #333A47; --ledger: #E2635B;
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #E8EBF2; --ink-soft: #A9B2C6; --bg: #171A21; --card: #21252F; --line: #333A47; --ledger: #E2635B;
+}
+* { box-sizing: border-box; margin: 0; }
+body {
+  font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  background: var(--bg); color: var(--ink); line-height: 1.5; font-variant-numeric: tabular-nums;
+}
+header.top { background: #14213D; color: #fff; padding: 0.8rem 0; }
+header.top .wrap { display: flex; align-items: baseline; gap: 0.6rem; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.2rem; }
+.wordmark { font-family: "IBM Plex Serif", Georgia, serif; font-size: 1.15rem; font-weight: 600; }
+.wordmark span { color: #F0A99F; }
+header.top a { color: #fff; text-decoration: none; font-size: 0.85rem; margin-left: auto; opacity: 0.85; }
+
+main.layout {
+  display: grid; grid-template-columns: minmax(320px, 400px) 1fr;
+  gap: 1.2rem; padding: 1.2rem; max-width: 1100px; margin: 0 auto; align-items: start;
+}
+@media (max-width: 860px) { main.layout { grid-template-columns: 1fr; } }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+.panel h1 { font-family: "IBM Plex Serif", Georgia, serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 0.6rem; }
+.panel h2 { font-size: 0.9rem; font-weight: 600; margin: 0.9rem 0 0.2rem; }
+label.f { display: block; font-size: 0.78rem; color: var(--ink-soft); margin: 0.5rem 0 0.15rem; }
+input, select {
+  font: inherit; width: 100%; background: var(--card); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 0.42rem 0.55rem; font-size: 0.9rem;
+}
+input:focus-visible, select:focus-visible, .btn:focus-visible { outline: 2px solid var(--ledger); outline-offset: 1px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 0.7rem; }
+.actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1rem; }
+.btn {
+  font: inherit; cursor: pointer; font-size: 0.9rem; font-weight: 500;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  border-radius: var(--radius); padding: 0.5rem 0.9rem;
+}
+.btn.primary { background: var(--ledger); border-color: var(--ledger); color: #fff; }
+
+/* slip */
+.slip {
+  background: #fff; color: #1A1A1A; border: 1px solid var(--line); border-radius: 2px;
+  padding: 1.6rem 1.9rem; max-width: 720px; font-size: 0.88rem;
+  box-shadow: 0 1px 4px rgba(20,33,61,0.10);
+}
+.slip .s-head { text-align: center; border-bottom: 1.5px solid #1A1A1A; padding-bottom: 0.7rem; }
+.slip .s-head b { font-family: "IBM Plex Serif", Georgia, serif; font-size: 1.2rem; display: block; }
+.slip .s-head p { font-size: 0.8rem; color: #555; white-space: pre-line; }
+.slip .s-title { text-align: center; font-size: 0.8rem; letter-spacing: 0.12em; color: #9E2B25; font-weight: 600; margin: 0.6rem 0; }
+.slip .s-emp { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 1.5rem; font-size: 0.84rem; margin-bottom: 0.8rem; }
+.slip .s-emp div span { color: #666; }
+.slip table { width: 100%; border-collapse: collapse; }
+.slip th {
+  border-top: 1.5px solid #1A1A1A; border-bottom: 1px solid #1A1A1A;
+  font-size: 0.75rem; font-weight: 600; padding: 0.4rem; text-align: left;
+}
+.slip td { padding: 0.35rem 0.4rem; border-bottom: 1px solid #E9E9E9; }
+.slip td.num, .slip th.num { text-align: right; white-space: nowrap; }
+.slip tr.total td { font-weight: 700; border-top: 1px solid #1A1A1A; border-bottom: none; }
+.slip .s-net { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.02rem; color: #9E2B25; border-top: 1.5px solid #1A1A1A; margin-top: 0.5rem; padding-top: 0.5rem; }
+.slip .s-words { font-size: 0.8rem; color: #444; margin-top: 0.4rem; border-top: 1px dashed #CCC; padding-top: 0.45rem; }
+.slip .s-sign { margin-top: 2rem; display: flex; justify-content: space-between; font-size: 0.78rem; color: #444; }
+.slip .s-sign .line { border-top: 1px solid #999; padding-top: 0.3rem; margin-top: 2rem; min-width: 10rem; text-align: center; }
+.slip .s-note { margin-top: 0.9rem; font-size: 0.7rem; color: #888; text-align: center; }
+
+#toast {
+  position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--bg); padding: 0.55rem 1rem;
+  border-radius: var(--radius); font-size: 0.88rem; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+#toast.show { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+
+@page { size: A4; margin: 14mm; }
+@media print {
+  body { background: #fff; }
+  header.top, .panel, #toast { display: none !important; }
+  main.layout { display: block; padding: 0; max-width: none; }
+  .slip { border: none; box-shadow: none; max-width: none; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="wordmark">Vyapar<span>Tools</span></div>
+    <a href="../">← All tools</a>
+  </div>
+</header>
+
+<main class="layout">
+  <div class="panel">
+    <h1>Salary Slip Maker</h1>
+    <label class="f" for="coName">Company / employer name</label>
+    <input id="coName" placeholder="Sharma Traders">
+    <label class="f" for="coAddr">Company address (optional)</label>
+    <input id="coAddr" placeholder="12, Main Market, Jaipur">
+    <div class="grid2">
+      <div>
+        <label class="f" for="empName">Employee name</label>
+        <input id="empName" placeholder="Mahesh Kumar">
+      </div>
+      <div>
+        <label class="f" for="empRole">Designation</label>
+        <input id="empRole" placeholder="Sales staff">
+      </div>
+      <div>
+        <label class="f" for="month">Salary month</label>
+        <input id="month" type="month">
+      </div>
+      <div>
+        <label class="f" for="paidDays">Paid days</label>
+        <input id="paidDays" type="number" min="0" max="31" value="30" inputmode="numeric">
+      </div>
+    </div>
+    <h2>Earnings ₹</h2>
+    <div class="grid2">
+      <div><label class="f" for="basic">Basic</label><input id="basic" type="number" min="0" placeholder="12000" inputmode="numeric"></div>
+      <div><label class="f" for="hra">HRA</label><input id="hra" type="number" min="0" placeholder="4000" inputmode="numeric"></div>
+      <div><label class="f" for="conv">Conveyance</label><input id="conv" type="number" min="0" placeholder="0" inputmode="numeric"></div>
+      <div><label class="f" for="otherE">Other allowance</label><input id="otherE" type="number" min="0" placeholder="0" inputmode="numeric"></div>
+    </div>
+    <h2>Deductions ₹</h2>
+    <div class="grid2">
+      <div><label class="f" for="pf">PF</label><input id="pf" type="number" min="0" placeholder="0" inputmode="numeric"></div>
+      <div><label class="f" for="esi">ESI</label><input id="esi" type="number" min="0" placeholder="0" inputmode="numeric"></div>
+      <div><label class="f" for="tds">TDS</label><input id="tds" type="number" min="0" placeholder="0" inputmode="numeric"></div>
+      <div><label class="f" for="otherD">Other / advance</label><input id="otherD" type="number" min="0" placeholder="0" inputmode="numeric"></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="btnPrint" type="button">Print / save PDF</button>
+    </div>
+  </div>
+
+  <article class="slip" id="slip" aria-label="Salary slip preview">
+    <div class="s-head">
+      <b id="pCo">Company name</b>
+      <p id="pCoAddr"></p>
+    </div>
+    <div class="s-title" id="pTitle">SALARY SLIP</div>
+    <div class="s-emp">
+      <div><span>Employee: </span><strong id="pEmp">—</strong></div>
+      <div><span>Designation: </span><strong id="pRole">—</strong></div>
+      <div><span>Month: </span><strong id="pMonth">—</strong></div>
+      <div><span>Paid days: </span><strong id="pDays">—</strong></div>
+    </div>
+    <table>
+      <thead>
+        <tr><th>Earnings</th><th class="num">Amount</th><th>Deductions</th><th class="num">Amount</th></tr>
+      </thead>
+      <tbody id="pRows"></tbody>
+    </table>
+    <div class="s-net"><span>Net pay</span><span id="pNet">—</span></div>
+    <p class="s-words" id="pWords"></p>
+    <div class="s-sign">
+      <div class="line">Employee signature</div>
+      <div class="line">Employer signature</div>
+    </div>
+    <p class="s-note">This is a computer-generated salary slip.</p>
+  </article>
+</main>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+
+  function fmt(n) { return "₹" + n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+  var ones = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+  var tens = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+  function two(n) { return n < 20 ? ones[n] : tens[Math.floor(n/10)] + (n%10 ? " " + ones[n%10] : ""); }
+  function three(n) { var h = Math.floor(n/100), r = n%100; return (h ? ones[h] + " Hundred" + (r ? " " : "") : "") + (r ? two(r) : ""); }
+  function inWords(num) {
+    if (num === 0) return "Zero";
+    var crore = Math.floor(num/10000000); num %= 10000000;
+    var lakh = Math.floor(num/100000); num %= 100000;
+    var thousand = Math.floor(num/1000); num %= 1000;
+    var out = [];
+    if (crore) out.push(three(crore) + " Crore");
+    if (lakh) out.push(two(lakh) + " Lakh");
+    if (thousand) out.push(two(thousand) + " Thousand");
+    if (num) out.push(three(num));
+    return out.join(" ");
+  }
+
+  var MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  function v(id) { return parseFloat($(id).value) || 0; }
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+
+  function render() {
+    $("pCo").textContent = $("coName").value || "Company name";
+    $("pCoAddr").textContent = $("coAddr").value;
+    $("pEmp").textContent = $("empName").value || "—";
+    $("pRole").textContent = $("empRole").value || "—";
+    var m = $("month").value;
+    $("pMonth").textContent = m ? MONTHS[parseInt(m.split("-")[1],10)-1] + " " + m.split("-")[0] : "—";
+    $("pTitle").textContent = "SALARY SLIP" + (m ? " — " + MONTHS[parseInt(m.split("-")[1],10)-1].toUpperCase() + " " + m.split("-")[0] : "");
+    $("pDays").textContent = $("paidDays").value || "—";
+
+    var earn = [["Basic", v("basic")], ["HRA", v("hra")], ["Conveyance", v("conv")], ["Other allowance", v("otherE")]].filter(function (x) { return x[1] > 0; });
+    var ded = [["PF", v("pf")], ["ESI", v("esi")], ["TDS", v("tds")], ["Other / advance", v("otherD")]].filter(function (x) { return x[1] > 0; });
+    var tE = earn.reduce(function (a, x) { return a + x[1]; }, 0);
+    var tD = ded.reduce(function (a, x) { return a + x[1]; }, 0);
+    var net = Math.max(0, tE - tD);
+
+    var body = $("pRows");
+    body.textContent = "";
+    var rows = Math.max(earn.length, ded.length, 1);
+    for (var i = 0; i < rows; i++) {
+      var tr = el("tr");
+      tr.appendChild(el("td", null, earn[i] ? earn[i][0] : ""));
+      tr.appendChild(el("td", "num", earn[i] ? fmt(earn[i][1]) : ""));
+      tr.appendChild(el("td", null, ded[i] ? ded[i][0] : ""));
+      tr.appendChild(el("td", "num", ded[i] ? fmt(ded[i][1]) : ""));
+      body.appendChild(tr);
+    }
+    var trT = el("tr", "total");
+    trT.appendChild(el("td", null, "Total earnings"));
+    trT.appendChild(el("td", "num", fmt(tE)));
+    trT.appendChild(el("td", null, "Total deductions"));
+    trT.appendChild(el("td", "num", fmt(tD)));
+    body.appendChild(trT);
+
+    $("pNet").textContent = fmt(net);
+    $("pWords").textContent = net > 0 ? "Net pay in words: Rupees " + inWords(Math.floor(net)) + " Only" : "";
+  }
+
+  ["coName","coAddr","empName","empRole","month","paidDays","basic","hra","conv","otherE","pf","esi","tds","otherD"].forEach(function (f) {
+    $(f).addEventListener("input", render);
+    $(f).addEventListener("change", render);
+  });
+
+  function toast(msg) {
+    var t = $("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast._h); toast._h = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+  }
+
+  $("btnPrint").addEventListener("click", function () {
+    var css = document.getElementById("appStyles").textContent;
+    var w = null;
+    try { w = window.open("", "_blank"); } catch (e) {}
+    if (w && w.document) {
+      var d = w.document;
+      d.open();
+      d.write("<!DOCTYPE html><html><head><meta charset='utf-8'><title>Salary slip<\/title>" +
+        "<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap'>" +
+        "<style>" + css + "<\/style>" +
+        "<style>body{background:#fff!important;margin:0;padding:1rem}.slip{box-shadow:none;max-width:720px;margin:0 auto}<\/style>" +
+        "<\/head><body><\/body><\/html>");
+      d.close();
+      d.body.appendChild(d.importNode($("slip"), true));
+      setTimeout(function () { try { w.focus(); w.print(); } catch (e) {} }, 500);
+    } else {
+      try { window.print(); } catch (e) { toast("Printing blocked — open in a full tab"); }
+    }
+  });
+
+  $("month").value = new Date().toISOString().slice(0, 7);
+  render();
+})();
+</script>
+</body>
+</html>

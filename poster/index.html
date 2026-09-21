@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offer Poster Maker — sale posters for WhatsApp</title>
+<meta name="description" content="Free offer poster maker for shops. Make a sale poster with your shop name and offer, download as image, share on WhatsApp status.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root {
+  --ink: #14213D; --ink-soft: #4A5878; --bg: #EEF0F4; --card: #FFFFFF;
+  --line: #D5DAE3; --ledger: #9E2B25; --radius: 8px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: #E8EBF2; --ink-soft: #A9B2C6; --bg: #171A21; --card: #21252F; --line: #333A47; --ledger: #E2635B;
+  }
+}
+:root[data-theme="dark"] {
+  --ink: #E8EBF2; --ink-soft: #A9B2C6; --bg: #171A21; --card: #21252F; --line: #333A47; --ledger: #E2635B;
+}
+* { box-sizing: border-box; margin: 0; }
+body {
+  font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif;
+  background: var(--bg); color: var(--ink); line-height: 1.5;
+}
+header.top { background: #14213D; color: #fff; padding: 0.8rem 0; }
+header.top .wrap { display: flex; align-items: baseline; gap: 0.6rem; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.2rem; }
+.wordmark { font-family: "IBM Plex Serif", Georgia, serif; font-size: 1.15rem; font-weight: 600; }
+.wordmark span { color: #F0A99F; }
+header.top a { color: #fff; text-decoration: none; font-size: 0.85rem; margin-left: auto; opacity: 0.85; }
+
+main.layout {
+  display: grid; grid-template-columns: minmax(320px, 400px) 1fr;
+  gap: 1.2rem; padding: 1.2rem; max-width: 1100px; margin: 0 auto; align-items: start;
+}
+@media (max-width: 860px) { main.layout { grid-template-columns: 1fr; } }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.1rem 1.2rem; }
+.panel h1 { font-family: "IBM Plex Serif", Georgia, serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 0.6rem; }
+label.f { display: block; font-size: 0.78rem; color: var(--ink-soft); margin: 0.55rem 0 0.15rem; }
+input {
+  font: inherit; width: 100%; background: var(--card); color: var(--ink);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 0.45rem 0.55rem; font-size: 0.9rem;
+}
+input:focus-visible, .btn:focus-visible, .themes button:focus-visible { outline: 2px solid var(--ledger); outline-offset: 1px; }
+.themes { display: flex; gap: 0.5rem; margin-top: 0.3rem; }
+.themes button {
+  width: 2.4rem; height: 2.4rem; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; padding: 0;
+}
+.themes button.on { border-color: var(--ink); }
+.themes .t-festive { background: linear-gradient(135deg, #7B1E12, #C43D2B); }
+.themes .t-fresh { background: linear-gradient(135deg, #0E4D3C, #1E8A62); }
+.themes .t-classic { background: linear-gradient(135deg, #14213D, #2C4270); }
+.actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1rem; }
+.btn {
+  font: inherit; cursor: pointer; font-size: 0.9rem; font-weight: 500;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  border-radius: var(--radius); padding: 0.5rem 0.9rem;
+}
+.btn.primary { background: var(--ledger); border-color: var(--ledger); color: #fff; }
+.hint { font-size: 0.75rem; color: var(--ink-soft); margin-top: 0.6rem; }
+
+/* poster */
+.poster-wrap { display: flex; justify-content: center; }
+.poster {
+  width: min(92vw, 480px); aspect-ratio: 1 / 1;
+  color: #fff; display: flex; flex-direction: column; justify-content: space-between;
+  padding: 7% 8%; text-align: center;
+  box-shadow: 0 8px 30px rgba(20,33,61,0.22);
+}
+.poster.t-festive { background: linear-gradient(160deg, #7B1E12 0%, #A82B1B 55%, #C43D2B 100%); }
+.poster.t-fresh { background: linear-gradient(160deg, #0E4D3C 0%, #14684D 55%, #1E8A62 100%); }
+.poster.t-classic { background: linear-gradient(160deg, #101A33 0%, #14213D 55%, #2C4270 100%); }
+.poster .po-shop {
+  font-size: clamp(0.9rem, 4vw, 1.25rem); font-weight: 600; letter-spacing: 0.06em;
+  border-bottom: 1px solid rgba(255,255,255,0.4); padding-bottom: 3%;
+}
+.poster .po-mid { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 2%; }
+.poster .po-head {
+  font-family: "IBM Plex Serif", Georgia, serif; font-weight: 700;
+  font-size: clamp(1.6rem, 9vw, 3rem); line-height: 1.05;
+}
+.poster .po-offer {
+  display: inline-block; align-self: center;
+  background: #fff; font-weight: 700;
+  font-size: clamp(1rem, 5vw, 1.7rem);
+  padding: 2.5% 6%; margin-top: 3%;
+}
+.poster.t-festive .po-offer { color: #A82B1B; }
+.poster.t-fresh .po-offer { color: #14684D; }
+.poster.t-classic .po-offer { color: #14213D; }
+.poster .po-detail { font-size: clamp(0.75rem, 3.2vw, 1rem); opacity: 0.92; margin-top: 3%; }
+.poster .po-foot { font-size: clamp(0.7rem, 3vw, 0.95rem); opacity: 0.92; border-top: 1px solid rgba(255,255,255,0.4); padding-top: 3%; }
+
+#toast {
+  position: fixed; bottom: 1.2rem; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: var(--bg); padding: 0.55rem 1rem;
+  border-radius: var(--radius); font-size: 0.88rem; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+#toast.show { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="wordmark">Vyapar<span>Tools</span></div>
+    <a href="../">← All tools</a>
+  </div>
+</header>
+
+<main class="layout">
+  <div class="panel">
+    <h1>Offer Poster Maker</h1>
+    <label class="f" for="shop">Shop name</label>
+    <input id="shop" placeholder="Sharma Traders" value="Sharma Traders">
+    <label class="f" for="head">Big headline</label>
+    <input id="head" placeholder="DIWALI SALE" value="DIWALI SALE">
+    <label class="f" for="offer">Offer</label>
+    <input id="offer" placeholder="FLAT 20% OFF" value="FLAT 20% OFF">
+    <label class="f" for="detail">Details (optional)</label>
+    <input id="detail" placeholder="On all kitchen items" value="On all kitchen items">
+    <label class="f" for="foot">Validity / phone / address</label>
+    <input id="foot" placeholder="Till 25 Oct · 98290 00000 · Main Market" value="Till 25 Oct · 98290 00000 · Main Market">
+    <label class="f">Colour theme</label>
+    <div class="themes" role="group" aria-label="Poster theme">
+      <button type="button" class="t-festive on" data-t="t-festive" aria-label="Festive red"></button>
+      <button type="button" class="t-fresh" data-t="t-fresh" aria-label="Fresh green"></button>
+      <button type="button" class="t-classic" data-t="t-classic" aria-label="Classic navy"></button>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="btnImage" type="button">Download poster image</button>
+    </div>
+    <p class="hint">Downloads a square image — perfect for WhatsApp status, Instagram, or printing as a small flyer.</p>
+  </div>
+
+  <div class="poster-wrap">
+    <div class="poster t-festive" id="poster">
+      <div class="po-shop" id="pShop">Sharma Traders</div>
+      <div class="po-mid">
+        <div class="po-head" id="pHead">DIWALI SALE</div>
+        <div class="po-offer" id="pOffer">FLAT 20% OFF</div>
+        <div class="po-detail" id="pDetail">On all kitchen items</div>
+      </div>
+      <div class="po-foot" id="pFoot">Till 25 Oct · 98290 00000 · Main Market</div>
+    </div>
+  </div>
+</main>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var theme = "t-festive";
+
+  function render() {
+    $("pShop").textContent = $("shop").value || " ";
+    $("pHead").textContent = $("head").value || " ";
+    $("pOffer").textContent = $("offer").value || " ";
+    var d = $("detail").value;
+    $("pDetail").textContent = d; $("pDetail").style.display = d ? "" : "none";
+    $("pFoot").textContent = $("foot").value || " ";
+  }
+  ["shop","head","offer","detail","foot"].forEach(function (f) {
+    $(f).addEventListener("input", render);
+  });
+
+  document.querySelectorAll(".themes button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll(".themes button").forEach(function (x) { x.classList.remove("on"); });
+      b.classList.add("on");
+      $("poster").classList.remove(theme);
+      theme = b.getAttribute("data-t");
+      $("poster").classList.add(theme);
+    });
+  });
+
+  function toast(msg) {
+    var t = $("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toast._h); toast._h = setTimeout(function(){ t.classList.remove("show"); }, 2000);
+  }
+
+  $("btnImage").addEventListener("click", function () {
+    if (typeof html2canvas !== "function") { toast("Image tool didn't load — check internet and reload"); return; }
+    toast("Preparing poster…");
+    html2canvas($("poster"), { scale: 1080 / $("poster").offsetWidth, useCORS: true })
+      .then(function (canvas) {
+        canvas.toBlob(function (blob) {
+          if (!blob) { toast("Could not create the image"); return; }
+          var name = "offer-poster.jpg";
+          var viaCapability = window.claude && typeof window.claude.use === "function";
+          if (viaCapability) {
+            window.claude.use("downloads").then(function (dl) {
+              if (dl) {
+                dl.save({ filename: name, data: blob }).then(function () {
+                  toast("Poster saved — share it on WhatsApp");
+                }).catch(function (err) {
+                  if (err && err.code === "declined") return;
+                  if (err && err.code === "rate_limited") { toast("One moment — try again"); return; }
+                  showInTab(blob);
+                });
+              } else showInTab(blob);
+            }).catch(function () { showInTab(blob); });
+          } else {
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = name;
+            document.body.appendChild(a); a.click(); a.remove();
+            toast("Poster downloaded");
+          }
+        }, "image/jpeg", 0.92);
+      })
+      .catch(function () { toast("Could not create the image"); });
+  });
+
+  function showInTab(blob) {
+    var w = null;
+    try { w = window.open("", "_blank"); } catch (e) {}
+    if (w && w.document) {
+      var img = w.document.createElement("img");
+      img.src = URL.createObjectURL(blob);
+      img.style.maxWidth = "100%";
+      w.document.body.style.margin = "0";
+      w.document.body.appendChild(img);
+      toast("Poster opened — long-press or right-click to save");
+    } else toast("Could not open the image — allow popups and retry");
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
