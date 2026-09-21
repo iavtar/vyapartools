@@ -1,11 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Salary Slip Maker — free payslips for small businesses</title>
+<title>Free Salary Slip Maker — Payslip Generator | VyaparTool</title>
 <meta name="description" content="Free salary slip generator for India. Earnings, PF/ESI/TDS deductions, net pay in words. Print or save as PDF. No signup.">
+<link rel="canonical" href="https://www.vyapartool.com/salary-slip/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#14213D">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VyaparTool">
+<meta property="og:locale" content="en_IN">
+<meta property="og:url" content="https://www.vyapartool.com/salary-slip/">
+<meta property="og:title" content="Free Salary Slip Maker — Payslip Generator">
+<meta property="og:description" content="Monthly payslips with earnings, PF/ESI/TDS deductions and net pay in words. Print or save as PDF — free, no signup.">
+<meta property="og:image" content="https://www.vyapartool.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="VyaparTool — free GST bills, quotations, receipts and payslips">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Salary Slip Maker — Payslip Generator">
+<meta name="twitter:description" content="Monthly payslips with earnings, PF/ESI/TDS deductions and net pay in words. Print or save as PDF — free, no signup.">
+<meta name="twitter:image" content="https://www.vyapartool.com/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Salary Slip Maker",
+      "url": "https://www.vyapartool.com/salary-slip/",
+      "description": "Free salary slip generator for India. Earnings, PF/ESI/TDS deductions and net pay in words.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en-IN",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+      "publisher": { "@type": "Organization", "name": "VyaparTool", "url": "https://www.vyapartool.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "VyaparTool", "item": "https://www.vyapartool.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Salary Slip Maker", "item": "https://www.vyapartool.com/salary-slip/" }
+      ]
+    }
+  ]
+}
+</script>
 <style id="appStyles">
 :root {
   --ink: #14213D; --ink-soft: #4A5878; --bg: #EEF0F4; --card: #FFFFFF;
@@ -91,16 +139,45 @@ input:focus-visible, select:focus-visible, .btn:focus-visible { outline: 2px sol
 @page { size: A4; margin: 14mm; }
 @media print {
   body { background: #fff; }
-  header.top, .panel, #toast { display: none !important; }
+  header.top, .panel, #toast, .site-foot { display: none !important; }
   main.layout { display: block; padding: 0; max-width: none; }
   .slip { border: none; box-shadow: none; max-width: none; }
 }
+/* ---------- small screens ---------- */
+.grid2 > * { min-width: 0; }
+@media (max-width: 620px) {
+  main.layout { padding: 0.8rem; gap: 0.9rem; }
+  .panel { padding: 0.9rem 1rem; }
+  main.layout > * { min-width: 0; }
+  .slip { padding: 1.1rem 1rem; font-size: 0.8rem; }
+  .slip .s-emp { grid-template-columns: 1fr; }
+  .slip table { font-size: 0.78rem; }
+}
+/* the paired number fields still fit two-up on a phone; only stack on very narrow screens */
+@media (max-width: 400px) {
+  .grid2 { grid-template-columns: 1fr; }
+}
+
+/* ---------- site footer ---------- */
+.site-foot {
+  border-top: 1px solid var(--line);
+  margin-top: 2.2rem;
+  padding: 1.1rem 0 2rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.site-foot .foot-in {
+  max-width: 1100px; margin: 0 auto; padding: 0 1.2rem;
+  display: flex; justify-content: space-between; gap: 0.5rem 1.4rem; flex-wrap: wrap;
+}
+.site-foot a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.site-foot a:hover { color: var(--ledger, #9E2B25); }
 </style>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
-    <div class="wordmark">Vyapar<span>Tools</span></div>
+    <div class="wordmark">Vyapar<span>Tool</span></div>
     <a href="../">← All tools</a>
   </div>
 </header>
@@ -176,6 +253,13 @@ input:focus-visible, select:focus-visible, .btn:focus-visible { outline: 2px sol
     <p class="s-note">This is a computer-generated salary slip.</p>
   </article>
 </main>
+
+<footer class="site-foot">
+  <div class="foot-in">
+    <span>&copy; 2026 <a href="../">VyaparTool</a> &mdash; free tools for Indian small businesses</span>
+    <span>Questions, a problem, or a tool request? Write to <a href="mailto:contact@vyapartool.com?subject=VyaparTool%3A%20Salary%20Slip%20Maker">contact@vyapartool.com</a></span>
+  </div>
+</footer>
 
 <div id="toast" role="status"></div>
 
@@ -286,5 +370,6 @@ input:focus-visible, select:focus-visible, .btn:focus-visible { outline: 2px sol
   render();
 })();
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
