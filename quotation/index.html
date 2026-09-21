@@ -1,11 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>QuickQuote — Quotations for small businesses</title>
+<title>Free Quotation Maker — Estimates with GST | VyaparTool</title>
+<meta name="description" content="Free quotation and estimate maker for Indian small businesses. GST, validity terms, your logo and signature. Print, save as PDF or share on WhatsApp. No signup.">
+<link rel="canonical" href="https://www.vyapartool.com/quotation/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#14213D">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VyaparTool">
+<meta property="og:locale" content="en_IN">
+<meta property="og:url" content="https://www.vyapartool.com/quotation/">
+<meta property="og:title" content="Free Quotation Maker — Estimates with GST">
+<meta property="og:description" content="Professional quotations and estimates with GST and validity terms. Print, save as PDF, or share on WhatsApp — free, no signup.">
+<meta property="og:image" content="https://www.vyapartool.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="VyaparTool — free GST bills, quotations, receipts and payslips">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Free Quotation Maker — Estimates with GST">
+<meta name="twitter:description" content="Professional quotations and estimates with GST and validity terms. Print, save as PDF, or share on WhatsApp — free, no signup.">
+<meta name="twitter:image" content="https://www.vyapartool.com/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Quotation Maker",
+      "url": "https://www.vyapartool.com/quotation/",
+      "description": "Free quotation and estimate maker for Indian small businesses, with GST and validity terms.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en-IN",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "INR" },
+      "publisher": { "@type": "Organization", "name": "VyaparTool", "url": "https://www.vyapartool.com/" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "VyaparTool", "item": "https://www.vyapartool.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Quotation Maker", "item": "https://www.vyapartool.com/quotation/" }
+      ]
+    }
+  ]
+}
+</script>
 <style id="appStyles">
 :root {
   --ink: #14213D;
@@ -55,11 +104,17 @@ header.app-bar {
   padding: 0.7rem 1.2rem;
   display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap;
 }
-header.app-bar h1 {
+header.app-bar .home {
   font-family: "IBM Plex Serif", Georgia, serif;
   font-size: 1.25rem; font-weight: 600; letter-spacing: 0.01em;
+  color: #fff; text-decoration: none; white-space: nowrap;
 }
-header.app-bar h1 span { color: #F0A99F; }
+header.app-bar .home span { color: #F0A99F; }
+header.app-bar .home:hover { text-decoration: underline; text-underline-offset: 3px; }
+header.app-bar h1 {
+  font-size: 0.95rem; font-weight: 600; white-space: nowrap;
+  padding-left: 0.8rem; border-left: 1px solid rgba(255,255,255,0.28);
+}
 header.app-bar .tagline { font-size: 0.82rem; opacity: 0.75; }
 header.app-bar .spacer { flex: 1; }
 .btn {
@@ -230,7 +285,7 @@ textarea { resize: vertical; min-height: 2.4rem; }
 @page { size: A4; margin: 12mm; }
 @media print {
   body { background: #fff; }
-  header.app-bar, .panel, .preview-tools, #toast { display: none !important; }
+  header.app-bar, .panel, .preview-tools, #toast, .site-foot { display: none !important; }
   main.layout { display: block; padding: 0; max-width: none; }
   .preview-wrap { position: static; }
   .bill { border: none; box-shadow: none; max-width: none; min-height: 0; padding: 0.5cm; border-radius: 0; }
@@ -253,11 +308,59 @@ textarea { resize: vertical; min-height: 2.4rem; }
 .bill.compact .b-sign { margin-top: 1.2rem; }
 .bill.compact .b-signimg { max-height: 44px; }
 .bill.compact .b-stamp { max-height: 70px; }
+/* ---------- small screens ---------- */
+.grid2 > * { min-width: 0; }
+@media (max-width: 620px) {
+  header.app-bar { padding: 0.6rem 0.9rem; gap: 0.4rem 0.6rem; }
+  header.app-bar .tagline { display: none; }
+  header.app-bar h1 { font-size: 0.9rem; padding-left: 0.6rem; }
+  main.layout { padding: 0.8rem; gap: 0.9rem; }
+  .panel section { padding: 0.85rem 0.9rem; }
+  main.layout > * { min-width: 0; }
+  .preview-wrap { overflow-x: auto; }
+  .bill { padding: 1.1rem 1rem; min-height: 0; font-size: 0.82rem; }
+  .bill .b-top { flex-wrap: wrap; }
+  .bill table.b-items th, .bill table.b-items td { padding: 0.32rem 0.25rem; }
+  .grid2 { grid-template-columns: 1fr; }
+  /* the items table becomes one card per item */
+  .items-form thead { display: none; }
+  .items-form, .items-form tbody { display: block; }
+  .items-form tr {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.6rem;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 0.7rem; margin-bottom: 0.6rem; position: relative;
+  }
+  .items-form td { display: block; padding: 0; min-width: 0; }
+  .items-form td[data-lbl]::before {
+    content: attr(data-lbl);
+    display: block; font-size: 0.72rem; color: var(--ink-soft); margin-bottom: 0.2rem;
+  }
+  .items-form td:nth-child(1), .items-form td:nth-child(2) { grid-column: 1 / -1; }
+  .items-form td:nth-child(1) { padding-right: 1.9rem; }
+  .items-form td.rm { position: absolute; top: 0.3rem; right: 0.35rem; width: auto; }
+  .items-form .qty, .items-form .rate { width: 100%; }
+}
+
+/* ---------- site footer ---------- */
+.site-foot {
+  border-top: 1px solid var(--line);
+  margin-top: 2.2rem;
+  padding: 1.1rem 0 2rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.site-foot .foot-in {
+  max-width: 1280px; margin: 0 auto; padding: 0 1.2rem;
+  display: flex; justify-content: space-between; gap: 0.5rem 1.4rem; flex-wrap: wrap;
+}
+.site-foot a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.site-foot a:hover { color: var(--ledger, #9E2B25); }
 </style>
 </head>
 <body>
 <header class="app-bar">
-  <h1>Quick<span>Quote</span></h1>
+  <a class="home" href="../">Vyapar<span>Tool</span></a>
+  <h1>Quotation Maker</h1>
   <p class="tagline">Professional quotations — in under a minute</p>
   <div class="spacer"></div>
   <button class="btn ghost-on-dark" id="btnNew">New quotation</button>
@@ -465,6 +568,13 @@ textarea { resize: vertical; min-height: 2.4rem; }
   </div>
 </main>
 
+<footer class="site-foot">
+  <div class="foot-in">
+    <span>&copy; 2026 <a href="../">VyaparTool</a> &mdash; free tools for Indian small businesses</span>
+    <span>Questions, a problem, or a tool request? Write to <a href="mailto:contact@vyapartool.com?subject=VyaparTool%3A%20Quotation%20Maker">contact@vyapartool.com</a></span>
+  </div>
+</footer>
+
 <div id="toast" role="status"></div>
 
 <script>
@@ -533,6 +643,9 @@ textarea { resize: vertical; min-height: 2.4rem; }
       tr.remove(); render();
     });
     [desc, hsn, qty, rate].forEach(function (el) { el.addEventListener("input", render); });
+    /* data-lbl drives the stacked field labels on narrow screens, where thead is hidden */
+    tdD.setAttribute("data-lbl", "Description"); tdH.setAttribute("data-lbl", "HSN/SAC");
+    tdQ.setAttribute("data-lbl", "Qty"); tdR.setAttribute("data-lbl", "Rate \u20B9");
     tdD.appendChild(desc); tdH.appendChild(hsn); tdQ.appendChild(qty); tdR.appendChild(rate); tdX.appendChild(rm);
     tr.appendChild(tdD); tr.appendChild(tdH); tr.appendChild(tdQ); tr.appendChild(tdR); tr.appendChild(tdX);
     $("itemRows").appendChild(tr);
@@ -816,7 +929,7 @@ textarea { resize: vertical; min-height: 2.4rem; }
     if (w && w.document) {
       var d = w.document;
       d.open();
-      d.write("<!DOCTYPE html><html><head><meta charset='utf-8'><title>Bill</title>" +
+      d.write("<!DOCTYPE html><html><head><meta charset='utf-8'><title>Quotation<\/title>" +
         "<link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap'>" +
         "<style>" + css + "<\/style>" +
         "<style>body{background:#fff!important;margin:0;padding:1rem}.bill{border:none;box-shadow:none;max-width:760px;margin:0 auto}<\/style>" +
@@ -893,8 +1006,8 @@ textarea { resize: vertical; min-height: 2.4rem; }
       '</svg>';
     var iconUrl = "data:image/svg+xml;base64," + btoa(iconSvg);
     var manifest = {
-      name: "QuickQuote — Quotation Maker",
-      short_name: "QuickQuote",
+      name: "VyaparTool — Quotation Maker",
+      short_name: "Quotation",
       start_url: location.href,
       display: "standalone",
       background_color: "#EEF0F4",
@@ -930,5 +1043,6 @@ textarea { resize: vertical; min-height: 2.4rem; }
   renderSaved();
 })();
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
